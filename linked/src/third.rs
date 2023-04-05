@@ -2,6 +2,9 @@
 
 use std::sync::Arc;
 
+#[cfg(test)]
+mod test;
+
 
 pub struct List<T> {
     head: Link<T>,
