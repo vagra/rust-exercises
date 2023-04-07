@@ -1,4 +1,4 @@
-use crate::second::List;
+use super::List;
 
 #[test]
 fn basics() {
