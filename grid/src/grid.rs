@@ -71,7 +71,7 @@ impl Grid {
 
     pub fn insert(&mut self, id: u32, x:f32, y:f32) {
 
-        let obj = Unit::create(id, x as i16, y as i16);
+        let obj = Unit::new(id, x as i16, y as i16);
 
         if let Some((col, row)) = pos2cell(x, y) {
             if self.rows[row].cols[col].head == -1 {

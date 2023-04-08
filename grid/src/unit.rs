@@ -7,6 +7,11 @@ use rand::Rng;
 use crate::pool::*;
 
 
+#[cfg(test)]
+mod test;
+
+
+
 pub const INACTIVE: u32 = u32::MAX;
 
 const X_RANGE: i16 = 1000;
@@ -38,9 +43,8 @@ impl Default for Unit {
 
 
 impl Unit {
-    
 
-    pub fn create(id: u32, x: i16, y: i16) -> Self {
+    pub fn new(id: u32, x: i16, y: i16) -> Self {
 
         Self {
             id: id,
@@ -49,15 +53,6 @@ impl Unit {
             next: INVALID,
             next_free: INVALID,
         }
-    }
-
-    pub fn copy(&mut self, unit: &Unit) {
-
-        self.id = unit.id;
-        self.x = unit.x;
-        self.y = unit.y;
-        self.next = unit.next;
-        self.next_free = unit.next_free;
     }
 
     pub fn disable(&mut self) {
@@ -115,6 +110,13 @@ impl IndexMut<u16> for UnitList {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
         &mut self.0[index as usize]
+    }
+}
+
+impl Drop for UnitList {
+
+    fn drop(&mut self) {
+        self.clear();
     }
 }
 

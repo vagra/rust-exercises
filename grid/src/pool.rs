@@ -50,6 +50,13 @@ impl IndexMut<u16> for Pool {
 
 }
 
+impl Drop for Pool {
+
+    fn drop(&mut self) {
+        self.clear();
+    }
+}
+
 
 impl Pool {
 
@@ -65,7 +72,7 @@ impl Pool {
             let index = self.first_free;
             self.first_free = self.data[index].next_free;
 
-            self.data[index].copy(&unit);
+            self.data[index] = unit;
 
             index
         } else {
