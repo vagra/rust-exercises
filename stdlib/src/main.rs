@@ -1,8 +1,9 @@
 mod stdvec;
 mod stdarray;
 
+
 fn main() {
-    println!("Hello, world!");
+    println!("Hello, stdlib!");
 
     println!("\n-----------  Vec  ---------------");
     stdvec::main();

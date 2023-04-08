@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![allow(dead_code)]
 
 use std::mem;
 use rand::Rng;
@@ -73,7 +73,7 @@ pub fn main() {
     let mut list: List = List::new();
     list.print();
 
-    let mut list: List = List::random();
+    list = List::random();
     list.print();
 
     println!("array len: {}", list.0.len());
