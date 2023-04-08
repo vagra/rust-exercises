@@ -68,6 +68,19 @@ impl Pool {
         self.size -= 1;
     }
 
+    pub fn clear(&mut self) {
+
+        if self.data.is_empty() {
+            assert_eq!(self.first_free, INVALID);
+            return;
+        }
+
+        self.data.clear();
+        self.first_free = INVALID;
+        self.size = 0;
+
+    }
+
 
     pub fn print(&self) {
 
@@ -90,7 +103,7 @@ pub fn main() {
 
 #[cfg(test)]
 mod test {
-    use crate::{pool::INVALID, unit::NEGATIVE};
+    use crate::{pool::INVALID, unit::INACTIVE};
 
     use super::{Pool, Unit};
 
@@ -132,21 +145,21 @@ mod test {
 
         pool.erase(2);
         assert_eq!(pool.data[2], 
-            Unit{id: NEGATIVE, x: 30, y:30, next: INVALID, next_free: INVALID}
+            Unit{id: INACTIVE, x: 30, y:30, next: INVALID, next_free: INVALID}
         );
         assert_eq!(pool.first_free, 2);
         assert_eq!(pool.size, 8);
 
         pool.erase(0);
         assert_eq!(pool.data[0], 
-            Unit{id: NEGATIVE, x: 10, y:10, next: INVALID, next_free: 2}
+            Unit{id: INACTIVE, x: 10, y:10, next: INVALID, next_free: 2}
         );
         assert_eq!(pool.first_free, 0);
         assert_eq!(pool.size, 7);
 
         pool.erase(5);
         assert_eq!(pool.data[5], 
-            Unit{id: NEGATIVE, x: 60, y:60, next: INVALID, next_free: 0}
+            Unit{id: INACTIVE, x: 60, y:60, next: INVALID, next_free: 0}
         );
         assert_eq!(pool.first_free, 5);
         assert_eq!(pool.size, 6);
@@ -188,7 +201,26 @@ mod test {
         assert_eq!(index, 9);
         assert_eq!(pool.first_free, INVALID);
         assert_eq!(pool.size, 10);
-        
+    }
+
+    #[test]
+    fn clear() {
+        let mut pool = Pool::default();
+
+        pool.insert(Unit::create(100, 10, 10));
+        pool.insert(Unit::create(101, 20, 20));
+        pool.insert(Unit::create(102, 30, 30));
+
+        assert_eq!(pool.first_free, INVALID);
+        assert_eq!(pool.size, 3);
+
+        pool.clear();
+        assert_eq!(pool.first_free, INVALID);
+        assert_eq!(pool.size, 0);
+
+        pool.clear();
+        assert_eq!(pool.first_free, INVALID);
+        assert_eq!(pool.size, 0);
     }
 
 }
