@@ -56,8 +56,8 @@ impl Unit {
         self.id = unit.id;
         self.x = unit.x;
         self.y = unit.y;
-        self.next = INVALID;
-        self.next_free = INVALID;
+        self.next = unit.next;
+        self.next_free = unit.next_free;
     }
 
     pub fn disable(&mut self) {
@@ -69,7 +69,6 @@ impl Unit {
 
         self.id == INACTIVE
     }
-
 
     pub fn random() -> Self {
 
@@ -92,8 +91,17 @@ impl Unit {
 }
 
 
+
 #[derive(Debug)]
 pub struct UnitList(Vec<Unit>);
+
+
+impl Default for UnitList {
+    fn default() -> Self {
+        
+        Self(Vec::new())
+    }
+}
 
 impl Index<u16> for UnitList {
     type Output = Unit;
@@ -104,18 +112,12 @@ impl Index<u16> for UnitList {
 }
 
 impl IndexMut<u16> for UnitList {
+
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
         &mut self.0[index as usize]
     }
 }
 
-
-impl Default for UnitList {
-    fn default() -> Self {
-        
-        Self(Vec::new())
-    }
-}
 
 impl UnitList {
 

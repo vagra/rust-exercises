@@ -3,6 +3,9 @@
 
 use crate::{unit::*, pool::*};
 
+#[cfg(test)]
+mod test;
+
 
 pub const COLS: usize = HALF_COLS * 2;
 pub const ROWS: usize = HALF_ROWS * 2;
