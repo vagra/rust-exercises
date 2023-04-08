@@ -151,7 +151,7 @@ mod test {
         assert_eq!(pool.first_free, 5);
         assert_eq!(pool.size, 6);
 
-        let index = pool.insert(Unit::create(110, 10, 10));
+        let mut index = pool.insert(Unit::create(110, 10, 10));
 
         assert_eq!(pool.data[5], 
             Unit{id: 110, x: 10, y:10, next: INVALID, next_free: INVALID}
@@ -159,9 +159,36 @@ mod test {
         assert_eq!(index, 5);
         assert_eq!(pool.first_free, 0);
         assert_eq!(pool.size, 7);
-
         assert_eq!(pool.data[pool.first_free].next_free, 2);
 
+        index = pool.insert(Unit::create(111, 11, 11));
+
+        assert_eq!(pool.data[0], 
+            Unit{id: 111, x: 11, y:11, next: INVALID, next_free: INVALID}
+        );
+        assert_eq!(index, 0);
+        assert_eq!(pool.first_free, 2);
+        assert_eq!(pool.size, 8);
+        assert_eq!(pool.data[pool.first_free].next_free, INVALID);
+
+        index = pool.insert(Unit::create(112, 12, 12));
+
+        assert_eq!(pool.data[2], 
+            Unit{id: 112, x: 12, y:12, next: INVALID, next_free: INVALID}
+        );
+        assert_eq!(index, 2);
+        assert_eq!(pool.first_free, INVALID);
+        assert_eq!(pool.size, 9);
+
+        index = pool.insert(Unit::create(115, 15, 15));
+
+        assert_eq!(pool.data[9], 
+            Unit{id: 115, x: 15, y:15, next: INVALID, next_free: INVALID}
+        );
+        assert_eq!(index, 9);
+        assert_eq!(pool.first_free, INVALID);
+        assert_eq!(pool.size, 10);
+        
     }
 
 }
