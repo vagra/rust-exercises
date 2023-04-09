@@ -83,6 +83,12 @@ impl Unit {
         self.y = rand::thread_rng().gen_range(-Y_RANGE..Y_RANGE);
     }
 
+    pub fn print(&self) {
+        println!("{}:({},{}) list_next:{} pool_next:{}", 
+            self.id, self.x, self.y, self.next, self.next_free
+        );
+    }
+
 }
 
 
@@ -102,13 +108,14 @@ impl Index<u16> for UnitList {
     type Output = Unit;
 
     fn index(&self, index: u16) -> &Self::Output {
-        &self.0[index as usize]    
+        &self.0[index as usize]
     }
 }
 
 impl IndexMut<u16> for UnitList {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
+
         &mut self.0[index as usize]
     }
 }

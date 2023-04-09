@@ -118,6 +118,11 @@ impl Pool {
         self.data.len()
     }
 
+    pub fn size(&self) -> u16 {
+
+        self.size
+    }
+
 
     pub fn print(&self) {
 
