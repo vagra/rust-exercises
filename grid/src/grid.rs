@@ -159,6 +159,8 @@ impl Grid {
 
     pub fn insert(&mut self, id: u32, x:f32, y:f32) {
 
+        assert!(id != INACTIVE);
+
         let (col, row) = pos2cell(x, y);
 
         let mut unit = Unit::new(id, x as i16, y as i16);
@@ -175,7 +177,47 @@ impl Grid {
     }
 
 
-    pub fn print(&self) {
+    pub fn remove(&mut self, id: u32, x:f32, y:f32) {
+
+        assert!(id != INACTIVE);
+
+        let (col, row) = pos2cell(x, y);
+
+        let mut index = self.list[row][col].head;
+        assert!(index != INVALID);
+
+        let mut prev = index;
+
+        while self.pool[index].id != id {
+            prev = index;
+
+            index = self.pool[index].next;
+            assert!(index != INVALID);
+        }
+        self.pool[prev].next = self.pool[index].next;
+
+        self.pool.erase(index);
+    }
+
+    pub fn print_units(&self, row: u16, col: u16) {
+
+        let mut index = self.list[row][col].head;
+
+        while index != INVALID {
+            let unit = self.pool[index];
+
+            let prev = index;
+            index = unit.next;
+
+            if !unit.is_free() {
+                print!("{}:", prev);
+                unit.print();
+            }
+        }
+
+    }
+
+    pub fn print_cells(&self) {
 
         for i in 0..ROWS {
             for j in 0..COLS {
@@ -214,10 +256,17 @@ pub fn main() {
     grid.insert(104, 123.3, -123.4);
     grid.insert(105, 423.3, 223.4);
 
-    grid.insert(106, 24.5, 14.3);
+    grid.insert(106, 24.5, 62.3);
+    grid.insert(107, 35.5, 35.3);
+    grid.insert(108, 42.5, 43.3);
+    grid.insert(109, 21.5, 23.3);
 
     println!("{}", grid.list[5][10].head);
-    grid[(5, 10)].print();
+    grid.print_units(5, 10);
+    grid.print_cells();
 
-    grid.print();
+    grid.remove(107, 35.5, 35.3);
+    println!("{}", grid.list[5][10].head);
+    grid.print_units(5, 10);
+    grid.print_cells();
 }
