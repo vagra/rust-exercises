@@ -13,16 +13,7 @@ fn default_work() {
 fn insert_work() {
     let mut grid = Grid::default();
 
-    grid.insert(100, 54.3, 29.4);
-    grid.insert(101, 12.3, 23.4);
-    grid.insert(102, -123.3, 223.4);
-    grid.insert(103, -323.3, -123.4);
-    grid.insert(104, 123.3, -123.4);
-    grid.insert(105, 423.3, 223.4);
-    grid.insert(106, 24.5, 62.3);
-    grid.insert(107, 35.5, 35.3);
-    grid.insert(108, 42.5, 43.3);
-    grid.insert(109, 21.5, 23.3);
+    grid.init_test_data();
 
     assert_eq!(grid.list[3][8].head, 2);
     assert_eq!(grid.list[3][14].head, 5);
@@ -75,16 +66,7 @@ fn remove_work() {
 
     let mut grid = Grid::default();
 
-    grid.insert(100, 54.3, 29.4);
-    grid.insert(101, 12.3, 23.4);
-    grid.insert(102, -123.3, 223.4);
-    grid.insert(103, -323.3, -123.4);
-    grid.insert(104, 123.3, -123.4);
-    grid.insert(105, 423.3, 223.4);
-    grid.insert(106, 24.5, 62.3);
-    grid.insert(107, 35.5, 35.3);
-    grid.insert(108, 42.5, 43.3);
-    grid.insert(109, 21.5, 23.3);
+    grid.init_test_data();
 
     grid.remove(107, 35.5, 35.3);
     grid.remove(109, 21.5, 23.3);
@@ -114,16 +96,7 @@ fn remove_work() {
 fn move_cell_work() {
     let mut grid = Grid::default();
 
-    grid.insert(100, 54.3, 29.4);
-    grid.insert(101, 12.3, 23.4);
-    grid.insert(102, -123.3, 223.4);
-    grid.insert(103, -323.3, -123.4);
-    grid.insert(104, 123.3, -123.4);
-    grid.insert(105, 423.3, 223.4);
-    grid.insert(106, 24.5, 62.3);
-    grid.insert(107, 35.5, 35.3);
-    grid.insert(108, 42.5, 43.3);
-    grid.insert(109, 21.5, 23.3);
+    grid.init_test_data();
 
     grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
     grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
@@ -183,4 +156,18 @@ fn move_cell_work() {
     );
 
 
+}
+
+
+#[test]
+fn query_work() {
+    let mut grid = Grid::default();
+
+    grid.init_test_data();
+
+    grid.insert(201, 38.5, 39.3);
+    let vec = grid.query(38.5, 39.3, 201);
+
+    assert_eq!(vec.len(), 4);
+    assert_eq!(vec, [9u16, 8u16, 7u16, 0u16]);
 }

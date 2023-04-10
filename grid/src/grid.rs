@@ -12,15 +12,15 @@ pub const COLS: u16 = HALF_COLS * 2;
 pub const ROWS: u16 = HALF_ROWS * 2;
 
 pub const CELL_SIZE: u16 = 100;
-pub const AGENT_RADIUS: u16 = 10;
-
-pub const OBJ_COUNT: u16 = 100;
+pub const CELL_RADIUS: f32 = 50.0;
+pub const UNIT_RADIUS: f32 = 10.0;
 
 const HALF_COLS: u16 = 10;
 const HALF_ROWS: u16 = 6;
 const COL_START: u16 = CELL_SIZE * HALF_COLS;
 const ROW_START: u16 = CELL_SIZE * HALF_ROWS;
 
+const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
 const INV_CELL_SIZE: f32 = 1.0 / (CELL_SIZE as f32);
 
 
@@ -188,6 +188,7 @@ impl Grid {
         self.pool.erase(index);
     }
 
+
     pub fn move_cell(&mut self, id: u32, prev_x: f32, prev_y: f32, x: f32, y: f32) {
         assert!(id != INACTIVE);
 
@@ -216,33 +217,35 @@ impl Grid {
 
     }
 
-    pub fn print_units(&self, row: u16, col: u16) {
 
-        let mut index = self.list[row][col].head;
+    pub fn query(&self, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
+        let (min_col, min_row) = pos2cell(x - CHECK_RADIUS, y + CHECK_RADIUS);
+        let (max_col, max_row) = pos2cell(x + CHECK_RADIUS, y - CHECK_RADIUS);
 
-        while index != INVALID {
-            let unit = self.pool[index];
+        let mut vec: Vec<u16> = Vec::new();
+        let mut index: u16;
+        for row in min_row..=max_row {
+            for col in min_col..=max_col {
 
-            let prev = index;
-            index = unit.next;
+                index = self.list[row][col].head;
 
-            if !unit.is_free() {
-                print!("{:4}: ", prev);
-                unit.print();
+                while index != INVALID {
+                    let unit = self.pool[index];
+
+                    if (unit.id != omit_id) &&
+                        (unit.x - x as i16).abs() <= CHECK_RADIUS as i16 && 
+                        (unit.y - y as i16).abs() <= CHECK_RADIUS as i16 {
+                        vec.push(index);
+                    }
+
+                    index = unit.next;
+                }
             }
         }
 
+        vec
     }
 
-    pub fn print_cells(&self) {
-
-        for i in 0..ROWS {
-            for j in 0..COLS {
-                print!("{:5} ", self.list[i][j].head)
-            }
-            println!()
-        }
-    }
 
     pub fn find_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
@@ -263,6 +266,7 @@ impl Grid {
 
         index
     }
+
 
     pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
@@ -293,6 +297,7 @@ impl Grid {
         index
     }
 
+
     pub fn push_cell(&mut self, index: u16, row: u16, col: u16) {
 
         if index == INVALID {
@@ -307,6 +312,51 @@ impl Grid {
         }
         
         self.pool[index].next = head;
+    }
+
+
+    pub fn print_units(&self, row: u16, col: u16) {
+
+        let mut index = self.list[row][col].head;
+
+        while index != INVALID {
+            let unit = self.pool[index];
+
+            let prev = index;
+            index = unit.next;
+
+            if !unit.is_free() {
+                print!("{:4}: ", prev);
+                unit.print();
+            }
+        }
+
+    }
+
+
+    pub fn print_cells(&self) {
+
+        for i in 0..ROWS {
+            for j in 0..COLS {
+                print!("{:5} ", self.list[i][j].head)
+            }
+            println!()
+        }
+    }
+
+    pub fn init_test_data(&mut self) {
+        self.insert(100, 54.3, 29.4);
+        self.insert(101, 12.3, 23.4);
+        self.insert(102, -123.3, 223.4);
+        self.insert(103, -323.3, -123.4);
+        self.insert(104, 123.3, -123.4);
+        self.insert(105, 423.3, 223.4);
+
+        self.insert(106, 24.5, 62.3);
+        self.insert(107, 35.5, 35.3);
+        self.insert(108, 42.5, 43.3);
+        self.insert(109, 21.5, 23.3);
+
     }
 
 }
@@ -330,25 +380,16 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
 
 pub fn main() {
-    test_insert_remove();
+    // test_insert_remove();
     // test_move_cell();
+    test_query();
 }
 
 
 fn test_insert_remove() {
     let mut grid = Grid::default();
 
-    grid.insert(100, 54.3, 29.4);
-    grid.insert(101, 12.3, 23.4);
-    grid.insert(102, -123.3, 223.4);
-    grid.insert(103, -323.3, -123.4);
-    grid.insert(104, 123.3, -123.4);
-    grid.insert(105, 423.3, 223.4);
-
-    grid.insert(106, 24.5, 62.3);
-    grid.insert(107, 35.5, 35.3);
-    grid.insert(108, 42.5, 43.3);
-    grid.insert(109, 21.5, 23.3);
+    grid.init_test_data();
 
     grid.print_cells();
     println!("{}", grid.list[5][10].head);
@@ -370,17 +411,7 @@ fn test_move_cell() {
 
     let mut grid = Grid::default();
 
-    grid.insert(100, 54.3, 29.4);
-    grid.insert(101, 12.3, 23.4);
-    grid.insert(102, -123.3, 223.4);
-    grid.insert(103, -323.3, -123.4);
-    grid.insert(104, 123.3, -123.4);
-    grid.insert(105, 423.3, 223.4);
-
-    grid.insert(106, 24.5, 62.3);
-    grid.insert(107, 35.5, 35.3);
-    grid.insert(108, 42.5, 43.3);
-    grid.insert(109, 21.5, 23.3);
+    grid.init_test_data();
 
     grid.print_cells();
     println!("{}", grid.list[5][10].head);
@@ -400,5 +431,23 @@ fn test_move_cell() {
     grid.print_units(5, 10);
     println!("{}", grid.list[7][11].head);
     grid.print_units(7, 11);
+
+}
+
+
+fn test_query() {
+
+    let mut grid = Grid::default();
+    grid.init_test_data();
+
+    grid.insert(201, 38.5, 39.3);
+    let vec = grid.query(38.5, 39.3, 201);
+
+    println!("{}", vec.len());
+
+    for index in vec {
+        print!("{:4}: ", index);
+        grid.pool[index].print();
+    }
 
 }
