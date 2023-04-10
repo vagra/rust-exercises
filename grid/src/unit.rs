@@ -84,7 +84,7 @@ impl Unit {
     }
 
     pub fn print(&self) {
-        println!("{}:({},{}) list_next:{} pool_next:{}", 
+        println!("{{id:{}, x:{}, y:{}, next:{}, next_free:{}}}", 
             self.id, self.x, self.y, self.next, self.next_free
         );
     }

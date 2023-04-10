@@ -183,21 +183,7 @@ impl Grid {
 
         let (col, row) = pos2cell(x, y);
 
-        let mut index = self.list[row][col].head;
-        assert!(index != INVALID);
-
-        let mut prev = index;
-        while self.pool[index].id != id {
-            prev = index;
-            index = self.pool[index].next;
-        }
-
-        if index == self.list[row][col].head {
-            self.list[row][col].head = self.pool[index].next;
-        }
-        else {
-            self.pool[prev].next = self.pool[index].next;
-        }
+        let index = self.pop_cell(id, row, col);
 
         self.pool.erase(index);
     }
@@ -205,34 +191,30 @@ impl Grid {
     pub fn move_cell(&mut self, id: u32, prev_x: f32, prev_y: f32, x: f32, y: f32) {
         assert!(id != INACTIVE);
 
+        if (prev_x as i16 == x as i16) && (prev_y as i16 == y as i16) {   
+            return;
+        }
+
         let (prev_col, prev_row) = pos2cell(prev_x, prev_y);
         let (col, row) = pos2cell(x, y);
 
+        let index: u16;
+
         if prev_col == col && prev_row == row {
 
-            if (prev_x as i16 == x as i16) && (prev_y as i16 == y as i16) {
-                return;
-            }
-
-            let mut index = self.list[row][col].head;
-            assert!(index != INVALID);
-
-            while self.pool[index].id != id {
-
-                index = self.pool[index].next;
-                assert!(index != INVALID);
-            }
-
-            self.pool[index].x = x as i16;
-            self.pool[index].y = y as i16;
+            index = self.find_cell(id, row, col);
         }
         else {
 
+            index = self.pop_cell(id, prev_row, prev_col);
+
+            self.push_cell(index, row, col);
         }
 
+        self.pool[index].x = x as i16;
+        self.pool[index].y = y as i16;
+
     }
-
-
 
     pub fn print_units(&self, row: u16, col: u16) {
 
@@ -245,7 +227,7 @@ impl Grid {
             index = unit.next;
 
             if !unit.is_free() {
-                print!("{}:", prev);
+                print!("{:4}: ", prev);
                 unit.print();
             }
         }
@@ -260,6 +242,71 @@ impl Grid {
             }
             println!()
         }
+    }
+
+    pub fn find_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
+
+        let mut index = self.list[row][col].head;
+
+        loop {
+
+            if index == INVALID {
+                return INVALID;
+            }
+
+            if self.pool[index].id == id {
+                break;
+            }
+
+            index = self.pool[index].next;
+        }
+
+        index
+    }
+
+    pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
+
+        let mut index = self.list[row][col].head;
+
+        let mut prev = index;
+        loop {
+
+            if index == INVALID {
+                return INVALID;
+            }
+
+            if self.pool[index].id == id {
+                break;
+            }
+
+            prev = index;
+            index = self.pool[index].next;
+        }
+
+        if index == self.list[row][col].head {
+            self.list[row][col].head = self.pool[index].next;
+        }
+        else {
+            self.pool[prev].next = self.pool[index].next;
+        }
+
+        index
+    }
+
+    pub fn push_cell(&mut self, index: u16, row: u16, col: u16) {
+
+        if index == INVALID {
+            return;
+        }
+
+        let head = self.list[row][col].head;
+        self.list[row][col].head = index;
+
+        if head == INVALID {
+            return;
+        }
+        
+        self.pool[index].next = head;
     }
 
 }
@@ -283,6 +330,12 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
 
 pub fn main() {
+    test_insert_remove();
+    // test_move_cell();
+}
+
+
+fn test_insert_remove() {
     let mut grid = Grid::default();
 
     grid.insert(100, 54.3, 29.4);
@@ -301,7 +354,6 @@ pub fn main() {
     println!("{}", grid.list[5][10].head);
     grid.print_units(5, 10);
     
-
     grid.remove(107, 35.5, 35.3);
     grid.print_cells();
     println!("{}", grid.list[5][10].head);
@@ -311,4 +363,42 @@ pub fn main() {
     grid.print_cells();
     println!("{}", grid.list[5][10].head);
     grid.print_units(5, 10);
+}
+
+
+fn test_move_cell() {
+
+    let mut grid = Grid::default();
+
+    grid.insert(100, 54.3, 29.4);
+    grid.insert(101, 12.3, 23.4);
+    grid.insert(102, -123.3, 223.4);
+    grid.insert(103, -323.3, -123.4);
+    grid.insert(104, 123.3, -123.4);
+    grid.insert(105, 423.3, 223.4);
+
+    grid.insert(106, 24.5, 62.3);
+    grid.insert(107, 35.5, 35.3);
+    grid.insert(108, 42.5, 43.3);
+    grid.insert(109, 21.5, 23.3);
+
+    grid.print_cells();
+    println!("{}", grid.list[5][10].head);
+    grid.print_units(5, 10);
+
+    grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
+    grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
+    grid.print_cells();
+    println!("{}", grid.list[5][10].head);
+    grid.print_units(5, 10);
+    println!("{}", grid.list[7][11].head);
+    grid.print_units(7, 11);
+
+    grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
+    grid.print_cells();
+    println!("{}", grid.list[5][10].head);
+    grid.print_units(5, 10);
+    println!("{}", grid.list[7][11].head);
+    grid.print_units(7, 11);
+
 }
