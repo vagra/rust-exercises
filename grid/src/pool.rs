@@ -84,6 +84,10 @@ impl Pool {
 
     pub fn erase(&mut self, index: u16) {
 
+        if index == INVALID {
+            return;
+        }
+
         if self.data.is_empty() {
             return;
         }

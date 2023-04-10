@@ -25,11 +25,11 @@ const INV_CELL_SIZE: f32 = 1.0 / (CELL_SIZE as f32);
 
 
 #[derive(Debug, Clone, Copy)]
-pub struct Col {
+pub struct Cell {
     head: u16,
 }
 
-impl Default for Col {
+impl Default for Cell {
     fn default() -> Self {
 
         Self {
@@ -40,19 +40,19 @@ impl Default for Col {
 
 
 #[derive(Debug, Clone, Copy)]
-pub struct Cols ([Col; COLS as usize]);
+pub struct Cols ([Cell; COLS as usize]);
 
 
 impl Default for Cols {
 
     fn default() -> Self {
         
-        Self([Col::default(); COLS as usize])
+        Self([Cell::default(); COLS as usize])
     }
 }
 
 impl Index<u16> for Cols {
-    type Output = Col;
+    type Output = Cell;
 
     fn index(&self, index: u16) -> &Self::Output {
         
@@ -187,17 +187,52 @@ impl Grid {
         assert!(index != INVALID);
 
         let mut prev = index;
-
         while self.pool[index].id != id {
             prev = index;
-
             index = self.pool[index].next;
-            assert!(index != INVALID);
         }
-        self.pool[prev].next = self.pool[index].next;
+
+        if index == self.list[row][col].head {
+            self.list[row][col].head = self.pool[index].next;
+        }
+        else {
+            self.pool[prev].next = self.pool[index].next;
+        }
 
         self.pool.erase(index);
     }
+
+    pub fn move_cell(&mut self, id: u32, prev_x: f32, prev_y: f32, x: f32, y: f32) {
+        assert!(id != INACTIVE);
+
+        let (prev_col, prev_row) = pos2cell(prev_x, prev_y);
+        let (col, row) = pos2cell(x, y);
+
+        if prev_col == col && prev_row == row {
+
+            if (prev_x as i16 == x as i16) && (prev_y as i16 == y as i16) {
+                return;
+            }
+
+            let mut index = self.list[row][col].head;
+            assert!(index != INVALID);
+
+            while self.pool[index].id != id {
+
+                index = self.pool[index].next;
+                assert!(index != INVALID);
+            }
+
+            self.pool[index].x = x as i16;
+            self.pool[index].y = y as i16;
+        }
+        else {
+
+        }
+
+    }
+
+
 
     pub fn print_units(&self, row: u16, col: u16) {
 
@@ -250,6 +285,7 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 pub fn main() {
     let mut grid = Grid::default();
 
+    grid.insert(100, 54.3, 29.4);
     grid.insert(101, 12.3, 23.4);
     grid.insert(102, -123.3, 223.4);
     grid.insert(103, -323.3, -123.4);
@@ -261,12 +297,18 @@ pub fn main() {
     grid.insert(108, 42.5, 43.3);
     grid.insert(109, 21.5, 23.3);
 
+    grid.print_cells();
     println!("{}", grid.list[5][10].head);
     grid.print_units(5, 10);
-    grid.print_cells();
+    
 
     grid.remove(107, 35.5, 35.3);
+    grid.print_cells();
     println!("{}", grid.list[5][10].head);
     grid.print_units(5, 10);
+
+    grid.remove(109, 21.5, 23.3);
     grid.print_cells();
+    println!("{}", grid.list[5][10].head);
+    grid.print_units(5, 10);
 }
