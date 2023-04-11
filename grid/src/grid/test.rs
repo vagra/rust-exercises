@@ -5,8 +5,8 @@ fn default_work() {
     let grid = Grid::default();
 
     assert_eq!(grid.pool.size(), 0);
-    assert_eq!(grid.list.len(), ROWS);
-    assert_eq!(grid.list[0].len(), COLS);
+    assert_eq!(grid.cells.len(), ROWS);
+    assert_eq!(grid.cells[0].len(), COLS);
 }
 
 #[test]
@@ -15,11 +15,11 @@ fn insert_work() {
 
     grid.init_test_data();
 
-    assert_eq!(grid.list[3][8].head, 2);
-    assert_eq!(grid.list[3][14].head, 5);
-    assert_eq!(grid.list[5][10].head, 9);
-    assert_eq!(grid.list[7][6].head, 3);
-    assert_eq!(grid.list[7][11].head, 4);
+    assert_eq!(grid.cells[3][8].head, 2);
+    assert_eq!(grid.cells[3][14].head, 5);
+    assert_eq!(grid.cells[5][10].head, 9);
+    assert_eq!(grid.cells[7][6].head, 3);
+    assert_eq!(grid.cells[7][11].head, 4);
 
     assert_eq!(grid.pool[9],
         Unit{id:109, x:21, y:23, next:8, next_free:INVALID}
@@ -71,11 +71,11 @@ fn remove_work() {
     grid.remove(107, 35.5, 35.3);
     grid.remove(109, 21.5, 23.3);
 
-    assert_eq!(grid.list[3][8].head, 2);
-    assert_eq!(grid.list[3][14].head, 5);
-    assert_eq!(grid.list[5][10].head, 8);
-    assert_eq!(grid.list[7][6].head, 3);
-    assert_eq!(grid.list[7][11].head, 4);
+    assert_eq!(grid.cells[3][8].head, 2);
+    assert_eq!(grid.cells[3][14].head, 5);
+    assert_eq!(grid.cells[5][10].head, 8);
+    assert_eq!(grid.cells[7][6].head, 3);
+    assert_eq!(grid.cells[7][11].head, 4);
 
     assert_eq!(grid.pool[8],
         Unit {id:108, x:42, y:43, next:6, next_free:INVALID}
@@ -101,8 +101,8 @@ fn move_cell_work() {
     grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
     grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
     
-    assert_eq!(grid.list[5][10].head, 9);
-    assert_eq!(grid.list[7][11].head, 6);
+    assert_eq!(grid.cells[5][10].head, 9);
+    assert_eq!(grid.cells[7][11].head, 6);
 
     assert_eq!(grid.pool[9],
         Unit{id:109, x:21, y:23, next:8, next_free:INVALID}
@@ -129,8 +129,8 @@ fn move_cell_work() {
 
     grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
 
-    assert_eq!(grid.list[5][10].head, 6);
-    assert_eq!(grid.list[7][11].head, 7);
+    assert_eq!(grid.cells[5][10].head, 6);
+    assert_eq!(grid.cells[7][11].head, 7);
 
     assert_eq!(grid.pool[6],
         Unit{id:106, x:24, y:62, next:9, next_free:INVALID}

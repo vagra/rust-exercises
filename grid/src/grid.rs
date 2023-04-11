@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::ops::{Index, IndexMut};
+use std::{ops::{Index, IndexMut}, mem};
 
 use crate::{unit::*, pool::*};
 
@@ -120,7 +120,7 @@ impl Rows {
 
 #[derive(Debug)]
 pub struct Grid{
-    list: Rows,
+    cells: Rows,
     pool: Pool,
 }
 
@@ -130,7 +130,7 @@ impl Default for Grid {
     fn default() -> Self {
         
         Self{
-            list: Rows::default(),
+            cells: Rows::default(),
             pool: Pool::default(),
         }
     }
@@ -141,7 +141,7 @@ impl Index<(u16, u16)> for Grid {
     
     fn index(&self, index: (u16, u16)) -> &Self::Output {
         let (i, j) = index;
-        let head = self.list[i][j].head;
+        let head = self.cells[i][j].head;
         &self.pool[head]
     }
 }
@@ -150,7 +150,7 @@ impl IndexMut<(u16, u16)> for Grid {
 
     fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
         let (i, j) = index;
-        let head = self.list[i][j].head;
+        let head = self.cells[i][j].head;
         &mut self.pool[head]
     }
 }
@@ -167,14 +167,14 @@ impl Grid {
 
         let mut unit = Unit::new(id, x as i16, y as i16);
 
-        if self.list[row][col].head != INVALID {
+        if self.cells[row][col].head != INVALID {
 
-            unit.next = self.list[row][col].head;
+            unit.next = self.cells[row][col].head;
         }
 
         let index = self.pool.insert(unit);
 
-        self.list[row][col].head = index;
+        self.cells[row][col].head = index;
 
     }
 
@@ -229,7 +229,7 @@ impl Grid {
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
-                index = self.list[row][col].head;
+                index = self.cells[row][col].head;
 
                 while index != INVALID {
                     let unit = self.pool[index];
@@ -265,7 +265,7 @@ impl Grid {
 
     pub fn find_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
-        let mut index = self.list[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         loop {
 
@@ -286,7 +286,7 @@ impl Grid {
 
     pub fn in_cell(&mut self, id: u32, row: u16, col: u16) -> bool {
 
-        let mut index = self.list[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         loop {
 
@@ -305,7 +305,7 @@ impl Grid {
 
     pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
-        let mut index = self.list[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         let mut prev = index;
         loop {
@@ -322,8 +322,8 @@ impl Grid {
             index = self.pool[index].next;
         }
 
-        if index == self.list[row][col].head {
-            self.list[row][col].head = self.pool[index].next;
+        if index == self.cells[row][col].head {
+            self.cells[row][col].head = self.pool[index].next;
         }
         else {
             self.pool[prev].next = self.pool[index].next;
@@ -339,8 +339,8 @@ impl Grid {
             return;
         }
 
-        let head = self.list[row][col].head;
-        self.list[row][col].head = index;
+        let head = self.cells[row][col].head;
+        self.cells[row][col].head = index;
 
         if head == INVALID {
             return;
@@ -352,7 +352,7 @@ impl Grid {
 
     pub fn print_units(&self, row: u16, col: u16) {
 
-        let mut index = self.list[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         while index != INVALID {
             let unit = self.pool[index];
@@ -373,7 +373,7 @@ impl Grid {
 
         for i in 0..ROWS {
             for j in 0..COLS {
-                print!("{:5} ", self.list[i][j].head)
+                print!("{:5} ", self.cells[i][j].head)
             }
             println!()
         }
@@ -415,9 +415,11 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
 
 pub fn main() {
-    test_insert_remove();
+    // test_insert_remove();
     // test_move_cell();
     // test_query();
+
+    print_size();
 }
 
 
@@ -427,17 +429,17 @@ fn test_insert_remove() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
     
     grid.remove(107, 35.5, 35.3);
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
 
     grid.remove(109, 21.5, 23.3);
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
 }
 
@@ -449,22 +451,22 @@ fn test_move_cell() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
 
     grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
     grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
-    println!("{}", grid.list[7][11].head);
+    println!("{}", grid.cells[7][11].head);
     grid.print_units(7, 11);
 
     grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
     grid.print_cells();
-    println!("{}", grid.list[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_units(5, 10);
-    println!("{}", grid.list[7][11].head);
+    println!("{}", grid.cells[7][11].head);
     grid.print_units(7, 11);
 
 }
@@ -485,4 +487,17 @@ fn test_query() {
         grid.pool[index].print();
     }
 
+}
+
+fn print_size() {
+    let mut grid = Grid::default();
+
+    grid.init_test_data();
+
+    println!("size of Unit: {}", mem::size_of::<Unit>());
+    println!("size of UnitList: {}", mem::size_of::<UnitList>());
+    println!("size of Rows: {}", mem::size_of::<Rows>());
+    println!("size of Cols: {}", mem::size_of::<Cols>());
+    println!("size of Pool: {}", mem::size_of::<Pool>());
+    println!("size of Grid: {}", mem::size_of::<Grid>());
 }
