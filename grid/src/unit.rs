@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::ops::{Index, IndexMut};
+use std::{ops::{Index, IndexMut}};
 
 use rand::Rng;
 
@@ -26,6 +26,7 @@ pub struct Unit {
 
     pub next: u16,
     pub next_free: u16,
+    pub out: bool,
 }
 
 impl Default for Unit {
@@ -37,7 +38,7 @@ impl Default for Unit {
             y: 0,
             next: INVALID,
             next_free: INVALID,
-
+            out: false,
         }
     }
 }
@@ -51,8 +52,8 @@ impl Unit {
             id: id,
             x: x,
             y: y,
-            next: INVALID,
-            next_free: INVALID,
+            
+            ..Default::default()
         }
     }
 
@@ -73,8 +74,7 @@ impl Unit {
             x: rand::thread_rng().gen_range(-X_RANGE..X_RANGE),
             y: rand::thread_rng().gen_range(-Y_RANGE..Y_RANGE),
 
-            next: INVALID,
-            next_free: INVALID,
+            ..Default::default()
         }
     }
 

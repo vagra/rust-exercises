@@ -10,11 +10,11 @@ fn basics() {
     pool.insert(Unit::new(3, 30, 30));
 
     assert_eq!(pool.data[2], 
-        Unit{id: 3, x:30, y:30, next:INVALID, next_free:INVALID});
+        Unit{id: 3, x:30, y:30, ..Default::default()});
     assert_eq!(pool.data[1],
-        Unit{id: 2, x:20, y:20, next:INVALID, next_free:INVALID});
+        Unit{id: 2, x:20, y:20, ..Default::default()});
     assert_eq!(pool.data[0],
-        Unit{id: 1, x:10, y:10, next:INVALID, next_free:INVALID});
+        Unit{id: 1, x:10, y:10, ..Default::default()});
     
     assert_eq!(pool.size, 3);
     assert_eq!(pool.capacity(), 3);
@@ -39,7 +39,7 @@ fn erase_insert() {
 
     pool.erase(2);
     assert_eq!(pool.data[2], 
-        Unit{id: INACTIVE, x: 30, y:30, next: INVALID, next_free: INVALID}
+        Unit{id: INACTIVE, x: 30, y:30, ..Default::default()}
     );
     assert_eq!(pool.first_free, 2);
     assert_eq!(pool.size, 8);
@@ -47,7 +47,7 @@ fn erase_insert() {
 
     pool.erase(0);
     assert_eq!(pool.data[0], 
-        Unit{id: INACTIVE, x: 10, y:10, next: INVALID, next_free: 2}
+        Unit{id: INACTIVE, x: 10, y:10, next_free: 2, ..Default::default()}
     );
     assert_eq!(pool.first_free, 0);
     assert_eq!(pool.size, 7);
@@ -55,7 +55,7 @@ fn erase_insert() {
 
     pool.erase(5);
     assert_eq!(pool.data[5], 
-        Unit{id: INACTIVE, x: 60, y:60, next: INVALID, next_free: 0}
+        Unit{id: INACTIVE, x: 60, y:60, next_free: 0, ..Default::default()}
     );
     assert_eq!(pool.first_free, 5);
     assert_eq!(pool.size, 6);
@@ -64,7 +64,7 @@ fn erase_insert() {
     let mut index = pool.insert(Unit::new(110, 10, 10));
 
     assert_eq!(pool.data[5], 
-        Unit{id: 110, x: 10, y:10, next: INVALID, next_free: INVALID}
+        Unit{id: 110, x: 10, y:10, ..Default::default()}
     );
     assert_eq!(index, 5);
     assert_eq!(pool.first_free, 0);
@@ -75,7 +75,7 @@ fn erase_insert() {
     index = pool.insert(Unit::new(111, 11, 11));
 
     assert_eq!(pool.data[0], 
-        Unit{id: 111, x: 11, y:11, next: INVALID, next_free: INVALID}
+        Unit{id: 111, x: 11, y:11, ..Default::default()}
     );
     assert_eq!(index, 0);
     assert_eq!(pool.first_free, 2);
@@ -86,7 +86,7 @@ fn erase_insert() {
     index = pool.insert(Unit::new(112, 12, 12));
 
     assert_eq!(pool.data[2], 
-        Unit{id: 112, x: 12, y:12, next: INVALID, next_free: INVALID}
+        Unit{id: 112, x: 12, y:12, ..Default::default()}
     );
     assert_eq!(index, 2);
     assert_eq!(pool.first_free, INVALID);
@@ -96,7 +96,7 @@ fn erase_insert() {
     index = pool.insert(Unit::new(115, 15, 15));
 
     assert_eq!(pool.data[9], 
-        Unit{id: 115, x: 15, y:15, next: INVALID, next_free: INVALID}
+        Unit{id: 115, x: 15, y:15, ..Default::default()}
     );
     assert_eq!(index, 9);
     assert_eq!(pool.first_free, INVALID);
@@ -141,13 +141,13 @@ fn index() {
     pool.insert(Unit::new(104, 50, 50));
 
     assert_eq!(pool[3],
-        Unit{id: 103, x: 40, y:40, next: INVALID, next_free: INVALID}
+        Unit{id: 103, x: 40, y:40, ..Default::default()}
     );
 
     pool[2].x = 35;
     pool[2].y = 45;
     assert_eq!(pool[2],
-        Unit{id: 102, x: 35, y:45, next: INVALID, next_free: INVALID}
+        Unit{id: 102, x: 35, y:45, ..Default::default()}
     );
 
 }

@@ -9,8 +9,7 @@ fn default_work() {
             id: INACTIVE,
             x: 0,
             y: 0,
-            next: INVALID,
-            next_free: INVALID,
+            ..Default::default()
         }
     )
 }
@@ -24,8 +23,7 @@ fn new_work() {
             id: 1,
             x: 20,
             y: 20,
-            next: INVALID,
-            next_free: INVALID,
+            ..Default::default()
         }
     )
 }
@@ -41,8 +39,7 @@ fn disable_work() {
             id: INACTIVE,
             x: 10,
             y: 10,
-            next: INVALID,
-            next_free: INVALID,
+            ..Default::default()
         }
     )
 }

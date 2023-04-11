@@ -22,22 +22,22 @@ fn insert_work() {
     assert_eq!(grid.cells[7][11].head, 4);
 
     assert_eq!(grid.pool[9],
-        Unit{id:109, x:21, y:23, next:8, next_free:INVALID}
+        Unit{id:109, x:21, y:23, next:8, ..Default::default()}
     );
     assert_eq!(grid.pool[8],
-        Unit {id:108, x:42, y:43, next:7, next_free:INVALID}
+        Unit {id:108, x:42, y:43, next:7, ..Default::default()}
     );
     assert_eq!(grid.pool[7],
-        Unit{id:107, x:35, y:35, next:6, next_free:INVALID}
+        Unit{id:107, x:35, y:35, next:6, ..Default::default()}
     );
     assert_eq!(grid.pool[6],
-        Unit {id:106, x:24, y:62, next:1, next_free:INVALID}
+        Unit {id:106, x:24, y:62, next:1, ..Default::default()}
     );
     assert_eq!(grid.pool[1],
-        Unit{id:101, x:12, y:23, next:0, next_free:INVALID}
+        Unit{id:101, x:12, y:23, next:0, ..Default::default()}
     );
     assert_eq!(grid.pool[0],
-        Unit{id:100, x:54, y:29, next:INVALID, next_free:INVALID}
+        Unit{id:100, x:54, y:29, ..Default::default()}
     )
 }
 
@@ -50,13 +50,13 @@ fn index_work() {
     grid.insert(103, 34.3, 65.4);
 
     assert_eq!(grid[(5, 10)],
-        Unit{id:103, x:34, y:65, next:1, next_free:INVALID}
+        Unit{id:103, x:34, y:65, next:1, ..Default::default()}
     );
     assert_eq!(grid.pool[grid[(5, 10)].next],
-        Unit{id:102, x:23, y:76, next:0, next_free:INVALID}
+        Unit{id:102, x:23, y:76, next:0, ..Default::default()}
     );
     assert_eq!(grid.pool[grid.pool[grid[(5, 10)].next].next],
-        Unit{id:101, x:12, y:98, next:INVALID, next_free:INVALID}
+        Unit{id:101, x:12, y:98, ..Default::default()}
     );
 
 }
@@ -78,16 +78,16 @@ fn remove_work() {
     assert_eq!(grid.cells[7][11].head, 4);
 
     assert_eq!(grid.pool[8],
-        Unit {id:108, x:42, y:43, next:6, next_free:INVALID}
+        Unit {id:108, x:42, y:43, next:6, ..Default::default()}
     );
     assert_eq!(grid.pool[6],
-        Unit {id:106, x:24, y:62, next:1, next_free:INVALID}
+        Unit {id:106, x:24, y:62, next:1, ..Default::default()}
     );
     assert_eq!(grid.pool[1],
-        Unit{id:101, x:12, y:23, next:0, next_free:INVALID}
+        Unit{id:101, x:12, y:23, next:0, ..Default::default()}
     );
     assert_eq!(grid.pool[0],
-        Unit{id:100, x:54, y:29, next:INVALID, next_free:INVALID}
+        Unit{id:100, x:54, y:29, ..Default::default()}
     );
 
 }
@@ -105,26 +105,26 @@ fn move_cell_work() {
     assert_eq!(grid.cells[7][11].head, 6);
 
     assert_eq!(grid.pool[9],
-        Unit{id:109, x:21, y:23, next:8, next_free:INVALID}
+        Unit{id:109, x:21, y:23, next:8, ..Default::default()}
     );
     assert_eq!(grid.pool[8],
-        Unit{id:108, x:42, y:43, next:1, next_free:INVALID}
+        Unit{id:108, x:42, y:43, next:1, ..Default::default()}
     );
     assert_eq!(grid.pool[1],
-        Unit{id:101, x:12, y:23, next:0, next_free:INVALID}
+        Unit{id:101, x:12, y:23, next:0, ..Default::default()}
     );
     assert_eq!(grid.pool[0],
-        Unit{id:100, x:54, y:29, next:INVALID, next_free:INVALID}
+        Unit{id:100, x:54, y:29, ..Default::default()}
     );
 
     assert_eq!(grid.pool[6],
-        Unit{id:106, x:112, y:-123, next:7, next_free:INVALID}
+        Unit{id:106, x:112, y:-123, next:7, ..Default::default()}
     );
     assert_eq!(grid.pool[7],
-        Unit{id:107, x:143, y:-165, next:4, next_free:INVALID}
+        Unit{id:107, x:143, y:-165, next:4, ..Default::default()}
     );
     assert_eq!(grid.pool[4],
-        Unit{id:104, x:123, y:-123, next:INVALID, next_free:INVALID}
+        Unit{id:104, x:123, y:-123, ..Default::default()}
     );
 
     grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
@@ -133,26 +133,26 @@ fn move_cell_work() {
     assert_eq!(grid.cells[7][11].head, 7);
 
     assert_eq!(grid.pool[6],
-        Unit{id:106, x:24, y:62, next:9, next_free:INVALID}
+        Unit{id:106, x:24, y:62, next:9, ..Default::default()}
     );
     assert_eq!(grid.pool[9],
-        Unit{id:109, x:21, y:23, next:8, next_free:INVALID}
+        Unit{id:109, x:21, y:23, next:8, ..Default::default()}
     );
     assert_eq!(grid.pool[8],
-        Unit{id:108, x:42, y:43, next:1, next_free:INVALID}
+        Unit{id:108, x:42, y:43, next:1, ..Default::default()}
     );
     assert_eq!(grid.pool[1],
-        Unit{id:101, x:12, y:23, next:0, next_free:INVALID}
+        Unit{id:101, x:12, y:23, next:0, ..Default::default()}
     );
     assert_eq!(grid.pool[0],
-        Unit{id:100, x:54, y:29, next:INVALID, next_free:INVALID}
+        Unit{id:100, x:54, y:29, ..Default::default()}
     );
 
     assert_eq!(grid.pool[7],
-        Unit{id:107, x:143, y:-165, next:4, next_free:INVALID}
+        Unit{id:107, x:143, y:-165, next:4, ..Default::default()}
     );
     assert_eq!(grid.pool[4],
-        Unit{id:104, x:123, y:-123, next:INVALID, next_free:INVALID}
+        Unit{id:104, x:123, y:-123, ..Default::default()}
     );
 
 
