@@ -2,7 +2,7 @@
 
 use std::{ops::{Index, IndexMut}, mem};
 
-use crate::{unit::*, pool::*, rows::*};
+use crate::{unit::*, pool::*, cells::*};
 
 #[cfg(test)]
 mod test;
