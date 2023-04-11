@@ -210,3 +210,23 @@ fn in_cell_work() {
     assert!(!grid.in_cell(107, 7, 11));
     
 }
+
+
+#[test]
+fn pos2cell_work() {
+    assert_eq!( (0, 0), pos2cell(-999.9999, 599.9999));
+    assert_eq!( (0, 0), pos2cell(-1000.0, 600.0));
+    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0001, 600.0001));
+
+    assert_eq!( (19, 0), pos2cell(999.9999, 599.9999));
+    assert_eq!( (INVALID, INVALID), pos2cell(1000.0, 600.0));
+    assert_eq!( (INVALID, INVALID), pos2cell(1000.0001, 600.0001));
+
+    assert_eq!( (19, 11), pos2cell(999.9999, -599.9999));
+    assert_eq!( (INVALID, INVALID), pos2cell(1000.0, -600.0));
+    assert_eq!( (INVALID, INVALID), pos2cell(1000.0001, -600.0001));
+
+    assert_eq!( (0, 11), pos2cell(-999.9999, -599.9999));
+    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0, -600.0));
+    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0001, -600.0001));
+}

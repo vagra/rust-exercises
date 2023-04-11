@@ -85,8 +85,8 @@ impl Unit {
     }
 
     pub fn print(&self) {
-        println!("{{id:{}, x:{}, y:{}, next:{}, next_free:{}}}", 
-            self.id, self.x, self.y, self.next, self.next_free
+        println!("{{id:{:5}, x:{:5}, y:{:5}, next:{:5}, next_free:{:5}, out:{:5}}}", 
+            self.id, self.x, self.y, self.next, self.next_free, self.out
         );
     }
 
@@ -157,7 +157,8 @@ impl UnitList {
 
     pub fn print(&self) {
         for (i, unit) in self.0.iter().enumerate() {
-            println!("{:3}: ({:3},{:3}) -> {:3}  ", i, unit.x, unit.y, unit.next);
+            print!("{:3}: ", i);
+            unit.print();
         }
 
         println!();

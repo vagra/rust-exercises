@@ -13,19 +13,19 @@ mod helper;
 pub const COLS: u16 = HALF_COLS * 2;
 pub const ROWS: u16 = HALF_ROWS * 2;
 
-pub const CELL_SIZE: u16 = 100;
+pub const CELL_SIZE: f32 = 100.0;
 pub const CELL_RADIUS: f32 = 50.0;
 pub const UNIT_RADIUS: f32 = 10.0;
 
 const HALF_COLS: u16 = 10;
 const HALF_ROWS: u16 = 6;
-const COL_START: u16 = CELL_SIZE * HALF_COLS;
-const ROW_START: u16 = CELL_SIZE * HALF_ROWS;
-const GRID_WIDTH: u16 = COLS * CELL_SIZE;
-const GRID_HEIGHT: u16 = ROWS * CELL_SIZE;
+const COL_START: f32 = CELL_SIZE * HALF_COLS as f32;
+const ROW_START: f32 = CELL_SIZE * HALF_ROWS as f32;
+const GRID_WIDTH: f32 = COLS as f32 * CELL_SIZE;
+const GRID_HEIGHT: f32 = ROWS as f32 * CELL_SIZE;
 
 const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
-const INV_CELL_SIZE: f32 = 1.0 / (CELL_SIZE as f32);
+const INV_CELL_SIZE: f32 = 1.0 / CELL_SIZE;
 
 
 
@@ -77,6 +77,12 @@ impl Grid {
         let (col, row) = pos2cell(x, y);
 
         let mut unit = Unit::new(id, x as i16, y as i16);
+
+        if col == INVALID {
+            unit.out = true;
+            self.pool.insert(unit);
+            return;
+        }
 
         if self.cells[row][col].head != INVALID {
 
@@ -160,17 +166,17 @@ impl Grid {
     }
 
     pub fn in_grid(&self, x: f32, y: f32) -> bool {
-        let dx = COL_START as f32 + x;
-        let dy = ROW_START as f32 - y;
+        let dx = COL_START + x;
+        let dy = ROW_START - y;
         let l = dx - UNIT_RADIUS;
         let t = dy + UNIT_RADIUS;
         let r = dx + UNIT_RADIUS;
         let b = dy - UNIT_RADIUS;
 
         return l >= 0.0 &&
-                r <= GRID_WIDTH as f32&&
+                r <= GRID_WIDTH&&
                 b >= 0.0 &&
-                t <= GRID_HEIGHT as f32;
+                t <= GRID_HEIGHT;
     }
 
 
@@ -290,6 +296,10 @@ impl Grid {
         }
     }
 
+    pub fn print_pool(&self) {
+        self.pool.print();
+    }
+
     pub fn init_test_data(&mut self) {
         self.insert(100, 54.3, 29.4);
         self.insert(101, 12.3, 23.4);
@@ -308,27 +318,36 @@ impl Grid {
 }
 
 
-fn pos2cell(x:f32, y:f32) -> (u16, u16) {
+pub fn pos2grid(x:f32, y:f32) -> (f32, f32) {
+    return (COL_START + x, ROW_START - y);
+}
 
-    let col = ((COL_START as f32 + x) * INV_CELL_SIZE) as i16;
-    let row = ((ROW_START as f32 - y) * INV_CELL_SIZE) as i16;
 
-    if col < 0 || col >= COLS as i16{
+pub fn pos2cell(x:f32, y:f32) -> (u16, u16) {
+
+    let (dx, dy) = pos2grid(x, y);
+
+    if dx < 0.0 || dx >= GRID_WIDTH||
+        dy < 0.0 || dy >= GRID_HEIGHT{
         return (INVALID, INVALID);
     }
 
-    if row < 0 || row >= ROWS as i16{
+    let col = (dx * INV_CELL_SIZE) as u16;
+    let row = (dy * INV_CELL_SIZE) as u16;
+
+    if col >= COLS || row >= ROWS {
         return (INVALID, INVALID);
     }
 
-    (col as u16, row as u16)
+    (col, row)
 }
 
 
 pub fn main() {
-    helper::test_insert_remove();
+    // helper::test_insert_remove();
     // helper::test_move_cell();
     // helper::test_query();
+    // helper::test_out_bounds_insert();
 
     // helper::print_size();
 }
