@@ -241,10 +241,10 @@ fn out_bounds_insert_work() {
     grid.insert(203, 999.999, -599.999);
     grid.insert(204, -1000.0, -599.999);
 
-    grid.insert(201, -1000.001, 600.001);
-    grid.insert(202, 1000.0, 600.001);
-    grid.insert(203, 1000.0, -600.0);
-    grid.insert(204, -1000.0, -600.0);
+    grid.insert(205, -1000.001, 600.001);
+    grid.insert(206, 1000.0, 600.001);
+    grid.insert(207, 1000.0, -600.0);
+    grid.insert(208, -1000.0, -600.0);
 
     
     assert_eq!(grid.pool[10], 
@@ -256,12 +256,12 @@ fn out_bounds_insert_work() {
     assert_eq!(grid.pool[13], 
         Unit{id:  204, x:-1000, y: -599, out:false, ..Default::default()});
     assert_eq!(grid.pool[14], 
-        Unit{id:  201, x:-1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  205, x:-1000, y:  600, out:true,  ..Default::default()});
     assert_eq!(grid.pool[15], 
-        Unit{id:  202, x: 1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  206, x: 1000, y:  600, out:true,  ..Default::default()});
     assert_eq!(grid.pool[16], 
-        Unit{id:  203, x: 1000, y: -600, out:true,  ..Default::default()});
+        Unit{id:  207, x: 1000, y: -600, out:true,  ..Default::default()});
     assert_eq!(grid.pool[17], 
-        Unit{id:  204, x:-1000, y: -600, out:true,  ..Default::default()});
+        Unit{id:  208, x:-1000, y: -600, out:true,  ..Default::default()});
     
 }
