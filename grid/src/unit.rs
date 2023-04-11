@@ -37,6 +37,7 @@ impl Default for Unit {
             y: 0,
             next: INVALID,
             next_free: INVALID,
+
         }
     }
 }

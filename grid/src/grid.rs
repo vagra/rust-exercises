@@ -2,10 +2,12 @@
 
 use std::{ops::{Index, IndexMut}, mem};
 
-use crate::{unit::*, pool::*};
+use crate::{unit::*, pool::*, rows::*};
 
 #[cfg(test)]
 mod test;
+
+mod helper;
 
 
 pub const COLS: u16 = HALF_COLS * 2;
@@ -25,97 +27,6 @@ const GRID_HEIGHT: u16 = ROWS * CELL_SIZE;
 const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
 const INV_CELL_SIZE: f32 = 1.0 / (CELL_SIZE as f32);
 
-
-#[derive(Debug, Clone, Copy)]
-pub struct Cell {
-    head: u16,
-}
-
-impl Default for Cell {
-    fn default() -> Self {
-
-        Self {
-            head: INVALID,
-        }
-    }
-}
-
-
-#[derive(Debug, Clone, Copy)]
-pub struct Cols ([Cell; COLS as usize]);
-
-
-impl Default for Cols {
-
-    fn default() -> Self {
-        
-        Self([Cell::default(); COLS as usize])
-    }
-}
-
-impl Index<u16> for Cols {
-    type Output = Cell;
-
-    fn index(&self, index: u16) -> &Self::Output {
-        
-        &self.0[index as usize]
-    }
-}
-
-impl IndexMut<u16> for Cols {
-
-    fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-
-        &mut self.0[index as usize]
-    }
-}
-
-
-impl Cols {
-
-    pub fn len(&self) -> u16 {
-        
-        self.0.len() as u16
-    }
-}
-
-
-#[derive(Debug)]
-pub struct Rows([Cols; ROWS as usize]);
-
-
-impl Default for Rows {
-
-    fn default() -> Self {
-        
-        Self([Cols::default(); ROWS as usize])
-    }
-}
-
-impl Index<u16> for Rows {
-    type Output = Cols;
-
-    fn index(&self, index: u16) -> &Self::Output {
-        
-        &self.0[index as usize]
-    }
-}
-
-impl IndexMut<u16> for Rows {
-
-    fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-
-        &mut self.0[index as usize]
-    }
-}
-
-impl Rows {
-
-    pub fn len(&self) -> u16 {
-        
-        self.0.len() as u16
-    }
-}
 
 
 #[derive(Debug)]
@@ -415,89 +326,9 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
 
 pub fn main() {
-    // test_insert_remove();
-    // test_move_cell();
-    // test_query();
+    helper::test_insert_remove();
+    // helper::test_move_cell();
+    // helper::test_query();
 
-    print_size();
-}
-
-
-fn test_insert_remove() {
-    let mut grid = Grid::default();
-
-    grid.init_test_data();
-
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-    
-    grid.remove(107, 35.5, 35.3);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-
-    grid.remove(109, 21.5, 23.3);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-}
-
-
-fn test_move_cell() {
-
-    let mut grid = Grid::default();
-
-    grid.init_test_data();
-
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-
-    grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
-    grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-    println!("{}", grid.cells[7][11].head);
-    grid.print_units(7, 11);
-
-    grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_units(5, 10);
-    println!("{}", grid.cells[7][11].head);
-    grid.print_units(7, 11);
-
-}
-
-
-fn test_query() {
-
-    let mut grid = Grid::default();
-    grid.init_test_data();
-
-    grid.insert(201, 38.5, 39.3);
-    let vec = grid.query(38.5, 39.3, 201);
-
-    println!("{}", vec.len());
-
-    for index in vec {
-        print!("{:4}: ", index);
-        grid.pool[index].print();
-    }
-
-}
-
-fn print_size() {
-    let mut grid = Grid::default();
-
-    grid.init_test_data();
-
-    println!("size of Unit: {}", mem::size_of::<Unit>());
-    println!("size of UnitList: {}", mem::size_of::<UnitList>());
-    println!("size of Rows: {}", mem::size_of::<Rows>());
-    println!("size of Cols: {}", mem::size_of::<Cols>());
-    println!("size of Pool: {}", mem::size_of::<Pool>());
-    println!("size of Grid: {}", mem::size_of::<Grid>());
+    // helper::print_size();
 }
