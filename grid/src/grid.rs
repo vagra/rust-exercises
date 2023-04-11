@@ -339,7 +339,7 @@ pub fn main() {
     // helper::test_pos2grid();
     // helper::test_pos2cell();
     // helper::test_out_bounds_insert();
-    helper::test_out_bounds_remove();
+    // helper::test_out_bounds_remove();
 
     // helper::print_size();
 }

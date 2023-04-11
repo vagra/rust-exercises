@@ -26,7 +26,6 @@ pub struct Unit {
 
     pub next: u16,
     pub next_free: u16,
-    pub out: bool,
 }
 
 impl Default for Unit {
@@ -38,7 +37,6 @@ impl Default for Unit {
             y: 0,
             next: INVALID,
             next_free: INVALID,
-            out: false,
         }
     }
 }
@@ -85,8 +83,8 @@ impl Unit {
     }
 
     pub fn print(&self) {
-        println!("{{id:{:5}, x:{:5}, y:{:5}, next:{:5}, next_free:{:5}, out:{:5}}}", 
-            self.id, self.x, self.y, self.next, self.next_free, self.out
+        println!("{{id:{:5}, x:{:5}, y:{:5}, next:{:5}, next_free:{:5}}}", 
+            self.id, self.x, self.y, self.next, self.next_free
         );
     }
 

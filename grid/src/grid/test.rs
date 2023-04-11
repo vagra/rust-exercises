@@ -242,21 +242,21 @@ fn out_bounds_insert_work() {
 
     
     assert_eq!(grid.pool[10], 
-        Unit{id:  201, x:-2000, y:  1600, out:false, ..Default::default()});
+        Unit{id:  201, x:-2000, y:  1600, ..Default::default()});
     assert_eq!(grid.pool[11], 
-        Unit{id:  202, x: 2000, y:  1600, out:false, ..Default::default()});
+        Unit{id:  202, x: 2000, y:  1600, ..Default::default()});
     assert_eq!(grid.pool[12], 
-        Unit{id:  203, x: 2000, y: -1600, out:false, ..Default::default()});
+        Unit{id:  203, x: 2000, y: -1600, ..Default::default()});
     assert_eq!(grid.pool[13], 
-        Unit{id:  204, x:-2000, y: -1600, out:false, ..Default::default()});
+        Unit{id:  204, x:-2000, y: -1600, ..Default::default()});
     assert_eq!(grid.pool[14], 
-        Unit{id:  205, x:-2000, y:  300, out:false,  ..Default::default()});
+        Unit{id:  205, x:-2000, y:   300, ..Default::default()});
     assert_eq!(grid.pool[15], 
-        Unit{id:  206, x: 2000, y:  300, out:false,  ..Default::default()});
+        Unit{id:  206, x: 2000, y:   300, ..Default::default()});
     assert_eq!(grid.pool[16], 
-        Unit{id:  207, x:  200, y: 1600, out:false,  ..Default::default()});
+        Unit{id:  207, x:  200, y:  1600, ..Default::default()});
     assert_eq!(grid.pool[17], 
-        Unit{id:  208, x:  200, y:-1600, out:false,  ..Default::default()});
+        Unit{id:  208, x:  200, y: -1600, ..Default::default()});
     
 }
 
@@ -275,12 +275,12 @@ fn out_bounds_remove_work() {
     grid.remove(208, 200.0, -1600.0);
 
     assert_eq!(grid.pool[10], 
-        Unit{id:  INACTIVE, x:-2000, y:  300, out:false,  ..Default::default()});
+        Unit{id:  INACTIVE, x:-2000, y:  300,  ..Default::default()});
     assert_eq!(grid.pool[11], 
-        Unit{id:  206, x: 2000, y:  300, out:false,  ..Default::default()});
+        Unit{id:  206,      x: 2000, y:  300,  ..Default::default()});
     assert_eq!(grid.pool[12], 
-        Unit{id:  207, x: 200, y: 1600, out:false,  ..Default::default()});
+        Unit{id:  207,      x:  200, y: 1600,  ..Default::default()});
     assert_eq!(grid.pool[13], 
-        Unit{id:  INACTIVE, x: 200, y:-1600, out:false, next:INVALID, next_free:10});
+        Unit{id:  INACTIVE, x:  200, y:-1600, next:INVALID, next_free:10});
 
 }
