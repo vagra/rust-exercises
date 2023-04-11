@@ -78,12 +78,6 @@ impl Grid {
 
         let mut unit = Unit::new(id, x as i16, y as i16);
 
-        if col == INVALID {
-            unit.out = true;
-            self.pool.insert(unit);
-            return;
-        }
-
         if self.cells[row][col].head != INVALID {
 
             unit.next = self.cells[row][col].head;
@@ -102,22 +96,14 @@ impl Grid {
 
         let (col, row) = pos2cell(x, y);
 
-        let index: u16;
-
-        if col == INVALID {
-
-            index = self.find_in_pool(id);    
-        }
-        else {
-
-            index = self.pop_cell(id, row, col);
-        }
+        let index = self.pop_cell(id, row, col);
 
         self.pool.erase(index);
     }
 
 
     pub fn move_cell(&mut self, id: u32, prev_x: f32, prev_y: f32, x: f32, y: f32) {
+
         assert!(id != INACTIVE);
 
         if (prev_x as i16 == x as i16) && (prev_y as i16 == y as i16) {   
@@ -336,21 +322,15 @@ pub fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
     let (dx, dy) = pos2grid(x, y);
 
-    if dx < 0.0 || dx >= GRID_WIDTH||
-        dy < 0.0 || dy >= GRID_HEIGHT{
-        return (INVALID, INVALID);
-    }
+    let col = dx * INV_CELL_SIZE;
+    let row = dy * INV_CELL_SIZE;
 
-    let col = (dx * INV_CELL_SIZE) as u16;
-    let row = (dy * INV_CELL_SIZE) as u16;
-
-    if col >= COLS || row >= ROWS {
-        return (INVALID, INVALID);
-    }
-
-    (col, row)
+    (u16clamp(col, COLS), u16clamp(row, ROWS))
 }
 
+pub fn u16clamp(x:f32, max:u16) -> u16 {
+    return x.clamp(0.0, (max - 1) as f32) as u16;
+}
 
 pub fn main() {
     // helper::test_insert_remove();

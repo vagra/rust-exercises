@@ -214,21 +214,15 @@ fn in_cell_work() {
 
 #[test]
 fn pos2cell_work() {
-    assert_eq!( (0, 0), pos2cell(-999.9999, 599.9999));
-    assert_eq!( (0, 0), pos2cell(-1000.0, 600.0));
-    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0001, 600.0001));
+    assert_eq!((0, 0), pos2cell(-2000.0, 1600.0));
+    assert_eq!((19, 0), pos2cell(2000.0, 1600.0));
+    assert_eq!((19, 11), pos2cell(2000.0, -1600.0));
+    assert_eq!((0, 11), pos2cell(-2000.0, -1600.0));
 
-    assert_eq!( (19, 0), pos2cell(999.9999, 599.9999));
-    assert_eq!( (INVALID, INVALID), pos2cell(1000.0, 600.0));
-    assert_eq!( (INVALID, INVALID), pos2cell(1000.0001, 600.0001));
-
-    assert_eq!( (19, 11), pos2cell(999.9999, -599.9999));
-    assert_eq!( (INVALID, INVALID), pos2cell(1000.0, -600.0));
-    assert_eq!( (INVALID, INVALID), pos2cell(1000.0001, -600.0001));
-
-    assert_eq!( (0, 11), pos2cell(-999.9999, -599.9999));
-    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0, -600.0));
-    assert_eq!( (INVALID, INVALID), pos2cell(-1000.0001, -600.0001));
+    assert_eq!((0, 3), pos2cell(-2000.0, 300.0));
+    assert_eq!((19, 3), pos2cell(2000.0, 300.0));
+    assert_eq!((12, 0), pos2cell(200.0, 1600.0));
+    assert_eq!((12, 11), pos2cell(200.0, -1600.0));
 }
 
 #[test]
@@ -236,33 +230,33 @@ fn out_bounds_insert_work() {
     let mut grid = Grid::default();
     grid.init_test_data();
 
-    grid.insert(201, -1000.0, 600.0);
-    grid.insert(202, 999.999, 600.0);
-    grid.insert(203, 999.999, -599.999);
-    grid.insert(204, -1000.0, -599.999);
+    grid.insert(201, -2000.0, 1600.0);
+    grid.insert(202, 2000.0, 1600.0);
+    grid.insert(203, 2000.0, -1600.0);
+    grid.insert(204, -2000.0, -1600.0);
 
-    grid.insert(205, -1000.001, 600.001);
-    grid.insert(206, 1000.0, 600.001);
-    grid.insert(207, 1000.0, -600.0);
-    grid.insert(208, -1000.0, -600.0);
+    grid.insert(205, -2000.0, 300.0);
+    grid.insert(206, 2000.0, 300.0);
+    grid.insert(207, 200.0, 1600.0);
+    grid.insert(208, 200.0, -1600.0);
 
     
     assert_eq!(grid.pool[10], 
-        Unit{id:  201, x:-1000, y:  600, out:false, ..Default::default()});
+        Unit{id:  201, x:-2000, y:  1600, out:false, ..Default::default()});
     assert_eq!(grid.pool[11], 
-        Unit{id:  202, x:  999, y:  600, out:false, ..Default::default()});
+        Unit{id:  202, x: 2000, y:  1600, out:false, ..Default::default()});
     assert_eq!(grid.pool[12], 
-        Unit{id:  203, x:  999, y: -599, out:false, ..Default::default()});
+        Unit{id:  203, x: 2000, y: -1600, out:false, ..Default::default()});
     assert_eq!(grid.pool[13], 
-        Unit{id:  204, x:-1000, y: -599, out:false, ..Default::default()});
+        Unit{id:  204, x:-2000, y: -1600, out:false, ..Default::default()});
     assert_eq!(grid.pool[14], 
-        Unit{id:  205, x:-1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  205, x:-2000, y:  300, out:false,  ..Default::default()});
     assert_eq!(grid.pool[15], 
-        Unit{id:  206, x: 1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  206, x: 2000, y:  300, out:false,  ..Default::default()});
     assert_eq!(grid.pool[16], 
-        Unit{id:  207, x: 1000, y: -600, out:true,  ..Default::default()});
+        Unit{id:  207, x:  200, y: 1600, out:false,  ..Default::default()});
     assert_eq!(grid.pool[17], 
-        Unit{id:  208, x:-1000, y: -600, out:true,  ..Default::default()});
+        Unit{id:  208, x:  200, y:-1600, out:false,  ..Default::default()});
     
 }
 
@@ -272,21 +266,21 @@ fn out_bounds_remove_work() {
     let mut grid = Grid::default();
     grid.init_test_data();
 
-    grid.insert(205, -1000.001, 600.001);
-    grid.insert(206, 1000.0, 600.001);
-    grid.insert(207, 1000.0, -600.0);
-    grid.insert(208, -1000.0, -600.0);
+    grid.insert(205, -2000.0, 300.0);
+    grid.insert(206, 2000.0, 300.0);
+    grid.insert(207, 200.0, 1600.0);
+    grid.insert(208, 200.0, -1600.0);
 
-    grid.remove(205, -1000.001, 600.001);
-    grid.remove(208, -1000.0, -600.0);
+    grid.remove(205, -2000.0, 300.0);
+    grid.remove(208, 200.0, -1600.0);
 
     assert_eq!(grid.pool[10], 
-        Unit{id:  INACTIVE, x:-1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  INACTIVE, x:-2000, y:  300, out:false,  ..Default::default()});
     assert_eq!(grid.pool[11], 
-        Unit{id:  206, x: 1000, y:  600, out:true,  ..Default::default()});
+        Unit{id:  206, x: 2000, y:  300, out:false,  ..Default::default()});
     assert_eq!(grid.pool[12], 
-        Unit{id:  207, x: 1000, y: -600, out:true,  ..Default::default()});
+        Unit{id:  207, x: 200, y: 1600, out:false,  ..Default::default()});
     assert_eq!(grid.pool[13], 
-        Unit{id:  INACTIVE, x:-1000, y: -600, out:true, next:INVALID, next_free:10});
+        Unit{id:  INACTIVE, x: 200, y:-1600, out:false, next:INVALID, next_free:10});
 
 }

@@ -86,21 +86,15 @@ pub fn test_pos2grid() {
 }
 
 pub fn test_pos2cell() {
-    print!("{:?}\t\t", pos2cell(-999.9999, 599.9999));
-    print!("{:?}\t", pos2cell(-1000.0, 600.0));
-    println!("{:?}", pos2cell(-1000.0001, 600.0001));
+    println!("{:?}", pos2cell(-2000.0, 1600.0));
+    println!("{:?}", pos2cell(2000.0, 1600.0));
+    println!("{:?}", pos2cell(2000.0, -1600.0));
+    println!("{:?}", pos2cell(-2000.0, -1600.0));
 
-    print!("{:?}\t", pos2cell(999.9999, 599.9999));
-    print!("{:?}\t", pos2cell(1000.0, 600.0));
-    println!("{:?}", pos2cell(1000.0001, 600.0001));
-
-    print!("{:?}", pos2cell(999.9999, -599.9999));
-    print!("{:?}\t", pos2cell(1000.0, -600.0));
-    println!("{:?}", pos2cell(1000.0001, -600.0001));
-
-    print!("{:?}\t", pos2cell(-999.9999, -599.9999));
-    print!("{:?}\t", pos2cell(-1000.0, -600.0));
-    println!("{:?}", pos2cell(-1000.0001, -600.0001));
+    println!("{:?}", pos2cell(-2000.0, 300.0));
+    println!("{:?}", pos2cell(2000.0, 300.0));
+    println!("{:?}", pos2cell(200.0, 1600.0));
+    println!("{:?}", pos2cell(200.0, -1600.0));
 }
 
 
@@ -111,15 +105,15 @@ pub fn test_out_bounds_insert() {
     grid.print_cells();
     grid.print_pool();
 
-    grid.insert(201, -1000.0, 600.0);
-    grid.insert(202, 999.999, 600.0);
-    grid.insert(203, 999.999, -599.999);
-    grid.insert(204, -1000.0, -599.999);
+    grid.insert(201, -2000.0, 1600.0);
+    grid.insert(202, 2000.0, 1600.0);
+    grid.insert(203, 2000.0, -1600.0);
+    grid.insert(204, -2000.0, -1600.0);
 
-    grid.insert(205, -1000.001, 600.001);
-    grid.insert(206, 1000.0, 600.001);
-    grid.insert(207, 1000.0, -600.0);
-    grid.insert(208, -1000.0, -600.0);
+    grid.insert(205, -2000.0, 300.0);
+    grid.insert(206, 2000.0, 300.0);
+    grid.insert(207, 200.0, 1600.0);
+    grid.insert(208, 200.0, -1600.0);
 
     grid.print_cells();
     grid.print_pool();
@@ -134,15 +128,15 @@ pub fn test_out_bounds_remove() {
     grid.print_cells();
     grid.print_pool();
 
-    grid.insert(205, -1000.001, 600.001);
-    grid.insert(206, 1000.0, 600.001);
-    grid.insert(207, 1000.0, -600.0);
-    grid.insert(208, -1000.0, -600.0);
+    grid.insert(205, -2000.0, 300.0);
+    grid.insert(206, 2000.0, 300.0);
+    grid.insert(207, 200.0, 1600.0);
+    grid.insert(208, 200.0, -1600.0);
     grid.print_cells();
     grid.print_pool();
 
-    grid.remove(205, -1000.001, 600.001);
-    grid.remove(208, -1000.0, -600.0);
+    grid.remove(205, -2000.0, 300.0);
+    grid.remove(208, 200.0, -1600.0);
     grid.print_cells();
     grid.print_pool();
 
