@@ -67,6 +67,43 @@ pub fn test_query() {
 }
 
 
+pub fn test_pos2grid() {
+    print!("{:?}\t", pos2grid(-999.9999, 599.9999));
+    print!("{:?}\t", pos2grid(-1000.0, 600.0));
+    println!("{:?}", pos2grid(-1000.0001, 600.0001));
+    
+    print!("{:?}\t", pos2grid(999.9999, 599.9999));
+    print!("{:?}\t", pos2grid(1000.0, 600.0));
+    println!("{:?}", pos2grid(1000.0001, 600.0001));
+    
+    print!("{:?}\t\t", pos2grid(999.9999, -599.9999));
+    print!("{:?}", pos2grid(1000.0, -600.0));
+    println!("{:?}", pos2grid(1000.0001, -600.0001));
+    
+    print!("{:?}\t", pos2grid(-999.9999, -599.9999));
+    print!("{:?}\t", pos2grid(-1000.0, -600.0));
+    println!("{:?}", pos2grid(-1000.0001, -600.0001));
+}
+
+pub fn test_pos2cell() {
+    print!("{:?}\t\t", pos2cell(-999.9999, 599.9999));
+    print!("{:?}\t", pos2cell(-1000.0, 600.0));
+    println!("{:?}", pos2cell(-1000.0001, 600.0001));
+
+    print!("{:?}\t", pos2cell(999.9999, 599.9999));
+    print!("{:?}\t", pos2cell(1000.0, 600.0));
+    println!("{:?}", pos2cell(1000.0001, 600.0001));
+
+    print!("{:?}", pos2cell(999.9999, -599.9999));
+    print!("{:?}\t", pos2cell(1000.0, -600.0));
+    println!("{:?}", pos2cell(1000.0001, -600.0001));
+
+    print!("{:?}\t", pos2cell(-999.9999, -599.9999));
+    print!("{:?}\t", pos2cell(-1000.0, -600.0));
+    println!("{:?}", pos2cell(-1000.0001, -600.0001));
+}
+
+
 pub fn test_out_bounds_insert() {
     let mut grid = Grid::default();
     grid.init_test_data();
@@ -74,38 +111,20 @@ pub fn test_out_bounds_insert() {
     grid.print_cells();
     grid.print_pool();
 
-    grid.insert(201, -1000.9, 600.8);
-    grid.insert(202, -1050.1, 600.8);
+    grid.insert(201, -1000.0, 600.0);
+    grid.insert(202, 999.999, 600.0);
+    grid.insert(203, 999.999, -599.999);
+    grid.insert(204, -1000.0, -599.999);
+
+    grid.insert(201, -1000.001, 600.001);
+    grid.insert(202, 1000.0, 600.001);
+    grid.insert(203, 1000.0, -600.0);
+    grid.insert(204, -1000.0, -600.0);
+
     grid.print_cells();
     grid.print_pool();
 
-    //print!("{:?}", pos2grid(-999.9999, 599.9999));
-    print!("{:?}\t\t", pos2cell(-999.9999, 599.9999));
-    //print!("{:?}", pos2grid(-1000.0, 600.0));
-    print!("{:?}\t", pos2cell(-1000.0, 600.0));
-    //print!("{:?}", pos2grid(-1000.0001, 600.0001));
-    println!("{:?}", pos2cell(-1000.0001, 600.0001));
-
-    //print!("{:?}", pos2grid(999.9999, 599.9999));
-    print!("{:?}\t", pos2cell(999.9999, 599.9999));
-    //print!("{:?}", pos2grid(1000.0, 600.0));
-    print!("{:?}\t", pos2cell(1000.0, 600.0));
-    //print!("{:?}", pos2grid(1000.0001, 600.0001));
-    println!("{:?}", pos2cell(1000.0001, 600.0001));
-
-    //print!("{:?}", pos2grid(999.9999, -599.9999));
-    print!("{:?}", pos2cell(999.9999, -599.9999));
-    //print!("{:?}", pos2grid(1000.0, -600.0));
-    print!("{:?}\t", pos2cell(1000.0, -600.0));
-    //print!("{:?}", pos2grid(1000.0001, -600.0001));
-    println!("{:?}", pos2cell(1000.0001, -600.0001));
-
-    //print!("{:?}", pos2grid(-999.9999, -599.9999));
-    print!("{:?}\t", pos2cell(-999.9999, -599.9999));
-    //print!("{:?}", pos2grid(-1000.0, -600.0));
-    print!("{:?}\t", pos2cell(-1000.0, -600.0));
-    //print!("{:?}", pos2grid(-1000.0001, -600.0001));
-    println!("{:?}", pos2cell(-1000.0001, -600.0001));
+    
 
 }
 

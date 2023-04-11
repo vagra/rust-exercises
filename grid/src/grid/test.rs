@@ -230,3 +230,38 @@ fn pos2cell_work() {
     assert_eq!( (INVALID, INVALID), pos2cell(-1000.0, -600.0));
     assert_eq!( (INVALID, INVALID), pos2cell(-1000.0001, -600.0001));
 }
+
+#[test]
+fn out_bounds_insert_work() {
+    let mut grid = Grid::default();
+    grid.init_test_data();
+
+    grid.insert(201, -1000.0, 600.0);
+    grid.insert(202, 999.999, 600.0);
+    grid.insert(203, 999.999, -599.999);
+    grid.insert(204, -1000.0, -599.999);
+
+    grid.insert(201, -1000.001, 600.001);
+    grid.insert(202, 1000.0, 600.001);
+    grid.insert(203, 1000.0, -600.0);
+    grid.insert(204, -1000.0, -600.0);
+
+    
+    assert_eq!(grid.pool[10], 
+        Unit{id:  201, x:-1000, y:  600, out:false, ..Default::default()});
+    assert_eq!(grid.pool[11], 
+        Unit{id:  202, x:  999, y:  600, out:false, ..Default::default()});
+    assert_eq!(grid.pool[12], 
+        Unit{id:  203, x:  999, y: -599, out:false, ..Default::default()});
+    assert_eq!(grid.pool[13], 
+        Unit{id:  204, x:-1000, y: -599, out:false, ..Default::default()});
+    assert_eq!(grid.pool[14], 
+        Unit{id:  201, x:-1000, y:  600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[15], 
+        Unit{id:  202, x: 1000, y:  600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[16], 
+        Unit{id:  203, x: 1000, y: -600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[17], 
+        Unit{id:  204, x:-1000, y: -600, out:true,  ..Default::default()});
+    
+}

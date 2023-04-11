@@ -347,7 +347,10 @@ pub fn main() {
     // helper::test_insert_remove();
     // helper::test_move_cell();
     // helper::test_query();
-    // helper::test_out_bounds_insert();
+    // helper::test_pos2grid();
+    // helper::test_pos2cell();
+
+    helper::test_out_bounds_insert();
 
     // helper::print_size();
 }
