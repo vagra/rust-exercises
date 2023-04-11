@@ -19,6 +19,8 @@ const HALF_COLS: u16 = 10;
 const HALF_ROWS: u16 = 6;
 const COL_START: u16 = CELL_SIZE * HALF_COLS;
 const ROW_START: u16 = CELL_SIZE * HALF_ROWS;
+const GRID_WIDTH: u16 = COLS * CELL_SIZE;
+const GRID_HEIGHT: u16 = ROWS * CELL_SIZE;
 
 const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
 const INV_CELL_SIZE: f32 = 1.0 / (CELL_SIZE as f32);
@@ -246,6 +248,20 @@ impl Grid {
         vec
     }
 
+    pub fn in_grid(&self, x: f32, y: f32) -> bool {
+        let dx = COL_START as f32 + x;
+        let dy = ROW_START as f32 - y;
+        let l = dx - UNIT_RADIUS;
+        let t = dy + UNIT_RADIUS;
+        let r = dx + UNIT_RADIUS;
+        let b = dy - UNIT_RADIUS;
+
+        return l >= 0.0 &&
+                r <= GRID_WIDTH as f32&&
+                b >= 0.0 &&
+                t <= GRID_HEIGHT as f32;
+    }
+
 
     pub fn find_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
@@ -265,6 +281,25 @@ impl Grid {
         }
 
         index
+    }
+
+
+    pub fn in_cell(&mut self, id: u32, row: u16, col: u16) -> bool {
+
+        let mut index = self.list[row][col].head;
+
+        loop {
+
+            if index == INVALID {
+                return false;
+            }
+
+            if self.pool[index].id == id {
+                return true;
+            }
+
+            index = self.pool[index].next;
+        }
     }
 
 
@@ -380,9 +415,9 @@ fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
 
 pub fn main() {
-    // test_insert_remove();
+    test_insert_remove();
     // test_move_cell();
-    test_query();
+    // test_query();
 }
 
 

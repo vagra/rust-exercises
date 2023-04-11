@@ -171,3 +171,42 @@ fn query_work() {
     assert_eq!(vec.len(), 4);
     assert_eq!(vec, [9u16, 8u16, 7u16, 0u16]);
 }
+
+
+#[test]
+fn in_grid_work() {
+
+    let mut grid = Grid::default();
+
+    grid.init_test_data();
+
+    assert!(grid.in_grid(-990.0, 590.0));
+    assert!(!grid.in_grid(-995.0, 595.0));
+
+    assert!(grid.in_grid(990.0, 590.0));
+    assert!(!grid.in_grid(995.0, 595.0));
+
+    assert!(grid.in_grid(990.0, -590.0));
+    assert!(!grid.in_grid(995.0, -595.0));
+
+    assert!(grid.in_grid(-990.0, -590.0));
+    assert!(!grid.in_grid(-995.0, -595.0));
+}
+
+
+#[test]
+fn in_cell_work() {
+
+    let mut grid = Grid::default();
+
+    grid.init_test_data();
+
+    assert!(grid.in_cell(108, 5, 10));
+    assert!(grid.in_cell(106, 5, 10));
+    assert!(grid.in_cell(101, 5, 10));
+
+
+    assert!(grid.in_cell(104, 7, 11));
+    assert!(!grid.in_cell(107, 7, 11));
+    
+}
