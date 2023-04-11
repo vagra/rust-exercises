@@ -155,6 +155,16 @@ impl UnitList {
         self.0.is_empty()
     }
 
+    pub fn find(&self, id:u32) -> u16 {
+        for (i, unit) in self.0.iter().enumerate() {
+            if unit.id == id {
+                return i as u16;
+            }
+        }
+
+        INVALID
+    }
+
     pub fn print(&self) {
         for (i, unit) in self.0.iter().enumerate() {
             print!("{:3}: ", i);

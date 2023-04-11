@@ -127,6 +127,9 @@ impl Pool {
         self.size
     }
 
+    pub fn find(&self, id:u32) -> u16 {
+        self.data.find(id)
+    }
 
     pub fn print(&self) {
 

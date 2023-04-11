@@ -102,7 +102,16 @@ impl Grid {
 
         let (col, row) = pos2cell(x, y);
 
-        let index = self.pop_cell(id, row, col);
+        let index: u16;
+
+        if col == INVALID {
+
+            index = self.find_in_pool(id);    
+        }
+        else {
+
+            index = self.pop_cell(id, row, col);
+        }
 
         self.pool.erase(index);
     }
@@ -122,7 +131,7 @@ impl Grid {
 
         if prev_col == col && prev_row == row {
 
-            index = self.find_cell(id, row, col);
+            index = self.find_in_cell(id, row, col);
         }
         else {
 
@@ -166,21 +175,23 @@ impl Grid {
     }
 
     pub fn in_grid(&self, x: f32, y: f32) -> bool {
-        let dx = COL_START + x;
-        let dy = ROW_START - y;
-        let l = dx - UNIT_RADIUS;
-        let t = dy + UNIT_RADIUS;
-        let r = dx + UNIT_RADIUS;
-        let b = dy - UNIT_RADIUS;
+        let (dx, dy) = pos2grid(x, y);
 
-        return l >= 0.0 &&
-                r <= GRID_WIDTH&&
-                b >= 0.0 &&
-                t <= GRID_HEIGHT;
+        return dx >= 0.0 && dx < GRID_WIDTH &&
+                dy >= 0.0 && dy < GRID_HEIGHT;
     }
 
+    pub fn find_in_pool(&mut self, id: u32) -> u16 {
 
-    pub fn find_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
+        assert!(id != INACTIVE);
+
+        self.pool.find(id)
+    }
+
+    pub fn find_in_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
+
+        assert!(row != INVALID);
+        assert!(col != INVALID);
 
         let mut index = self.cells[row][col].head;
 
@@ -191,13 +202,11 @@ impl Grid {
             }
 
             if self.pool[index].id == id {
-                break;
+                return index;
             }
 
             index = self.pool[index].next;
         }
-
-        index
     }
 
 
@@ -349,8 +358,8 @@ pub fn main() {
     // helper::test_query();
     // helper::test_pos2grid();
     // helper::test_pos2cell();
-
-    helper::test_out_bounds_insert();
+    // helper::test_out_bounds_insert();
+    helper::test_out_bounds_remove();
 
     // helper::print_size();
 }

@@ -180,17 +180,17 @@ fn in_grid_work() {
 
     grid.init_test_data();
 
-    assert!(grid.in_grid(-990.0, 590.0));
-    assert!(!grid.in_grid(-995.0, 595.0));
+    assert!(grid.in_grid(-1000.0, 600.0));
+    assert!(!grid.in_grid(-1000.001, 600.001));
 
-    assert!(grid.in_grid(990.0, 590.0));
-    assert!(!grid.in_grid(995.0, 595.0));
+    assert!(grid.in_grid(999.999, 600.0));
+    assert!(!grid.in_grid(1000.0, 600.001));
 
-    assert!(grid.in_grid(990.0, -590.0));
-    assert!(!grid.in_grid(995.0, -595.0));
+    assert!(grid.in_grid(999.999, -599.999));
+    assert!(!grid.in_grid(1000.0, -600.0));
 
-    assert!(grid.in_grid(-990.0, -590.0));
-    assert!(!grid.in_grid(-995.0, -595.0));
+    assert!(grid.in_grid(-1000.0, -599.999));
+    assert!(!grid.in_grid(-1000.001, -600.0));
 }
 
 
@@ -264,4 +264,29 @@ fn out_bounds_insert_work() {
     assert_eq!(grid.pool[17], 
         Unit{id:  208, x:-1000, y: -600, out:true,  ..Default::default()});
     
+}
+
+
+#[test]
+fn out_bounds_remove_work() {
+    let mut grid = Grid::default();
+    grid.init_test_data();
+
+    grid.insert(205, -1000.001, 600.001);
+    grid.insert(206, 1000.0, 600.001);
+    grid.insert(207, 1000.0, -600.0);
+    grid.insert(208, -1000.0, -600.0);
+
+    grid.remove(205, -1000.001, 600.001);
+    grid.remove(208, -1000.0, -600.0);
+
+    assert_eq!(grid.pool[10], 
+        Unit{id:  INACTIVE, x:-1000, y:  600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[11], 
+        Unit{id:  206, x: 1000, y:  600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[12], 
+        Unit{id:  207, x: 1000, y: -600, out:true,  ..Default::default()});
+    assert_eq!(grid.pool[13], 
+        Unit{id:  INACTIVE, x:-1000, y: -600, out:true, next:INVALID, next_free:10});
+
 }

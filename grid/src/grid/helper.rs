@@ -116,17 +116,38 @@ pub fn test_out_bounds_insert() {
     grid.insert(203, 999.999, -599.999);
     grid.insert(204, -1000.0, -599.999);
 
-    grid.insert(201, -1000.001, 600.001);
-    grid.insert(202, 1000.0, 600.001);
-    grid.insert(203, 1000.0, -600.0);
-    grid.insert(204, -1000.0, -600.0);
+    grid.insert(205, -1000.001, 600.001);
+    grid.insert(206, 1000.0, 600.001);
+    grid.insert(207, 1000.0, -600.0);
+    grid.insert(208, -1000.0, -600.0);
 
     grid.print_cells();
     grid.print_pool();
 
-    
+}
+
+
+pub fn test_out_bounds_remove() {
+    let mut grid = Grid::default();
+    grid.init_test_data();
+
+    grid.print_cells();
+    grid.print_pool();
+
+    grid.insert(205, -1000.001, 600.001);
+    grid.insert(206, 1000.0, 600.001);
+    grid.insert(207, 1000.0, -600.0);
+    grid.insert(208, -1000.0, -600.0);
+    grid.print_cells();
+    grid.print_pool();
+
+    grid.remove(205, -1000.001, 600.001);
+    grid.remove(208, -1000.0, -600.0);
+    grid.print_cells();
+    grid.print_pool();
 
 }
+
 
 
 pub fn print_size() {
