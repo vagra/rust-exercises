@@ -16,6 +16,7 @@ pub const ROWS: u16 = HALF_ROWS * 2;
 pub const CELL_SIZE: f32 = 100.0;
 pub const CELL_RADIUS: f32 = 50.0;
 pub const UNIT_RADIUS: f32 = 10.0;
+pub const CHECK_RADIUS_I16: i16 = CHECK_RADIUS as i16;
 
 const HALF_COLS: u16 = 10;
 const HALF_ROWS: u16 = 6;
@@ -25,7 +26,6 @@ const GRID_WIDTH: f32 = COLS as f32 * CELL_SIZE;
 const GRID_HEIGHT: f32 = ROWS as f32 * CELL_SIZE;
 
 const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
-const CHECK_RADIUS_I16: i16 = CHECK_RADIUS as i16;
 const INV_CELL_SIZE: f32 = 1.0 / CELL_SIZE;
 
 
@@ -167,8 +167,6 @@ impl Grid {
 
         let mut vec: Vec<u16> = Vec::new();
         let mut index: u16;
-        let mut dx: i16;
-        let mut dy: i16;
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
@@ -182,11 +180,7 @@ impl Grid {
                         continue;
                     }
 
-                    dx = unit.x - x as i16;
-                    dy = unit.y - y as i16;
-
-                    if dx.abs() <= CHECK_RADIUS_I16 &&
-                        dy.abs() <= CHECK_RADIUS_I16 {
+                    if unit.bump_front_xy(dir, x as i16, y as i16) {
 
                         vec.push(index);
                     }
@@ -347,9 +341,7 @@ impl Grid {
         self.insert(107, 35.5, 35.3);
         self.insert(108, 42.5, 43.3);
         self.insert(109, 21.5, 23.3);
-
     }
-
 }
 
 

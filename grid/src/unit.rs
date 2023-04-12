@@ -4,7 +4,7 @@ use std::{ops::{Index, IndexMut}};
 
 use rand::Rng;
 
-use crate::pool::*;
+use crate::{pool::*, grid::*};
 
 
 #[cfg(test)]
@@ -65,15 +65,39 @@ impl Unit {
         self.id == INACTIVE
     }
 
-    pub fn at_front(&self, other:&Unit, dir:u8) -> bool {
-        self.at_front_pos(dir, other.x, other.y)
+    pub fn bump_front(&self, other:&Unit, dir:u8) -> bool {
+
+        self.bump_front_xy(dir, other.x, other.y)
     }
 
-    pub fn at_front_pos(&self, dir:u8, x:i16, y:i16) -> bool {
+    pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
+        let dx = self.x - x;
+        let dy = self.y - y;
+
+        if dx.abs() > CHECK_RADIUS_I16 ||
+            dx.abs() > CHECK_RADIUS_I16 {
+
+                return false;
+        }
+        
+        Self::at_front_dxy(dir, dx, dy)
+    }
+
+    pub fn at_front(&self, other:&Unit, dir:u8) -> bool {
+
+        self.at_front_xy(dir, other.x, other.y)
+    }
+
+    fn at_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
 
         let dx = self.x - x;
         let dy = self.y - y;
         
+        Self::at_front_dxy(dir, dx, dy)
+    }
+
+    fn at_front_dxy(dir:u8, dx:i16, dy:i16) -> bool {
+
         match dir {
             1 => dx >= 0 && dy <= 0,
             2 => dx >= dy.abs(),
