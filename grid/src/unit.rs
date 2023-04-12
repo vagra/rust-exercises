@@ -65,6 +65,27 @@ impl Unit {
         self.id == INACTIVE
     }
 
+    pub fn at_front(&self, other:&Unit, dir:u8) -> bool {
+        self.at_front_pos(dir, other.x, other.y)
+    }
+
+    pub fn at_front_pos(&self, dir:u8, x:i16, y:i16) -> bool {
+
+        let dx = self.x - x;
+        let dy = self.y - y;
+        
+        match dir {
+            1 => dx >= 0 && dy <= 0,
+            2 => dx >= dy.abs(),
+            3 => dx >= 0 && dy >= 0,
+            4 => dy >= dx.abs(),
+            5 => dx <= 0 && dy >= 0,
+            6 => dx <= -dy.abs(),
+            7 => dx <= 0 && dy <= 0,
+            _ => dy <= -dx.abs(),
+        }
+    }
+
     pub fn random() -> Self {
 
         Self {

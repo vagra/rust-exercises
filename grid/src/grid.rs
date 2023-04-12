@@ -25,6 +25,7 @@ const GRID_WIDTH: f32 = COLS as f32 * CELL_SIZE;
 const GRID_HEIGHT: f32 = ROWS as f32 * CELL_SIZE;
 
 const CHECK_RADIUS: f32 = UNIT_RADIUS + UNIT_RADIUS;
+const CHECK_RADIUS_I16: i16 = CHECK_RADIUS as i16;
 const INV_CELL_SIZE: f32 = 1.0 / CELL_SIZE;
 
 
@@ -147,8 +148,8 @@ impl Grid {
                     let unit = self.pool[index];
 
                     if (unit.id != omit_id) &&
-                        (unit.x - x as i16).abs() <= CHECK_RADIUS as i16 && 
-                        (unit.y - y as i16).abs() <= CHECK_RADIUS as i16 {
+                        (unit.x - x as i16).abs() <= CHECK_RADIUS_I16 && 
+                        (unit.y - y as i16).abs() <= CHECK_RADIUS_I16 {
                         vec.push(index);
                     }
 
@@ -159,6 +160,45 @@ impl Grid {
 
         vec
     }
+
+    pub fn dir_query(&self, dir: u8, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
+        let (min_col, min_row) = pos2cell(x - CHECK_RADIUS, y + CHECK_RADIUS);
+        let (max_col, max_row) = pos2cell(x + CHECK_RADIUS, y - CHECK_RADIUS);
+
+        let mut vec: Vec<u16> = Vec::new();
+        let mut index: u16;
+        let mut dx: i16;
+        let mut dy: i16;
+        for row in min_row..=max_row {
+            for col in min_col..=max_col {
+
+                index = self.cells[row][col].head;
+
+                while index != INVALID {
+                    let unit = self.pool[index];
+
+                    if unit.id == omit_id {
+                        index = unit.next;
+                        continue;
+                    }
+
+                    dx = unit.x - x as i16;
+                    dy = unit.y - y as i16;
+
+                    if dx.abs() <= CHECK_RADIUS_I16 &&
+                        dy.abs() <= CHECK_RADIUS_I16 {
+
+                        vec.push(index);
+                    }
+
+                    index = unit.next;
+                }
+            }
+        }
+
+        vec
+    }
+
 
     pub fn in_grid(&self, x: f32, y: f32) -> bool {
         let (dx, dy) = pos2grid(x, y);
