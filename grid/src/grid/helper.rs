@@ -54,15 +54,44 @@ pub fn test_query() {
     let mut grid = Grid::default();
     grid.init_test_data();
 
-    grid.insert(201, 38.5, 39.3);
-    let vec = grid.query(38.5, 39.3, 201);
+    grid.insert(201, 25.5, 45.3);
+    let vec = grid.query(25.5, 45.3, 201);
+    grid.print_query(&vec);
+}
 
-    println!("{}", vec.len());
 
-    for index in vec {
-        print!("{:4}: ", index);
-        grid.pool[index].print();
-    }
+pub fn test_dir_query() {
+
+    let mut grid = Grid::default();
+    grid.init_test_data();
+
+    grid.insert(201, 25.5, 45.3);
+
+    let mut vec:Vec<u16>;
+
+    vec = grid.dir_query(0, 25.5, 45.3, 201);
+    grid.print_dir_query(0, &vec);
+
+    vec = grid.dir_query(1, 25.5, 45.3, 201);
+    grid.print_dir_query(1, &vec);
+
+    vec = grid.dir_query(2, 25.5, 45.3, 201);
+    grid.print_dir_query(2, &vec);
+
+    vec = grid.dir_query(3, 25.5, 45.3, 201);
+    grid.print_dir_query(3, &vec);
+
+    vec = grid.dir_query(4, 25.5, 45.3, 201);
+    grid.print_dir_query(4, &vec);
+
+    vec = grid.dir_query(5, 25.5, 45.3, 201);
+    grid.print_dir_query(5, &vec);
+
+    vec = grid.dir_query(6, 25.5, 45.3, 201);
+    grid.print_dir_query(6, &vec);
+
+    vec = grid.dir_query(7, 25.5, 45.3, 201);
+    grid.print_dir_query(7, &vec);
 
 }
 

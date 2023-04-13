@@ -174,6 +174,45 @@ fn query_work() {
 
 
 #[test]
+fn dir_query_work() {
+    let mut grid = Grid::default();
+
+    grid.init_test_data();
+
+    grid.insert(201, 25.5, 45.3);
+    let mut vec:Vec<u16>;
+
+    vec = grid.dir_query(0, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 1);
+    assert_eq!(vec, [7u16]);
+
+    vec = grid.dir_query(1, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 2);
+    assert_eq!(vec, [8u16, 7u16]);
+
+    vec = grid.dir_query(2, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 2);
+    assert_eq!(vec, [8u16, 7u16]);
+
+    vec = grid.dir_query(3, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 0);
+
+    vec = grid.dir_query(4, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 1);
+    assert_eq!(vec, [6u16]);
+
+    vec = grid.dir_query(5, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 1);
+    assert_eq!(vec, [6u16]);
+
+    vec = grid.dir_query(6, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 0);
+
+    vec = grid.dir_query(7, 25.5, 45.3, 201);
+    assert_eq!(vec.len(), 0);
+}
+
+#[test]
 fn in_grid_work() {
 
     let mut grid = Grid::default();

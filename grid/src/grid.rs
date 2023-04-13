@@ -148,8 +148,8 @@ impl Grid {
                     let unit = self.pool[index];
 
                     if (unit.id != omit_id) &&
-                        (unit.x - x as i16).abs() <= CHECK_RADIUS_I16 && 
-                        (unit.y - y as i16).abs() <= CHECK_RADIUS_I16 {
+                        unit.is_bump_xy(x as i16, y as i16) {
+
                         vec.push(index);
                     }
 
@@ -175,12 +175,8 @@ impl Grid {
                 while index != INVALID {
                     let unit = self.pool[index];
 
-                    if unit.id == omit_id {
-                        index = unit.next;
-                        continue;
-                    }
-
-                    if unit.bump_front_xy(dir, x as i16, y as i16) {
+                    if unit.id != omit_id &&
+                        unit.bump_front_xy(dir, x as i16, y as i16) {
 
                         vec.push(index);
                     }
@@ -329,6 +325,20 @@ impl Grid {
         self.pool.print();
     }
 
+    pub fn print_query(&self, indices:&Vec<u16>) {
+        for index in indices {
+            print!("{:2}: ", index);
+            self.pool[*index].print();
+        }
+    }
+
+    pub fn print_dir_query(&self, dir: u8, indices:&Vec<u16>) {
+        for index in indices {
+            print!("{} {:2}: ", dir, index);
+            self.pool[*index].print();
+        }
+    }
+
     pub fn init_test_data(&mut self) {
         self.insert(100, 54.3, 29.4);
         self.insert(101, 12.3, 23.4);
@@ -367,11 +377,13 @@ pub fn u16clamp(x:f32, max:u16) -> u16 {
 pub fn main() {
     // helper::test_insert_remove();
     // helper::test_move_cell();
-    // helper::test_query();
     // helper::test_pos2grid();
     // helper::test_pos2cell();
     // helper::test_out_bounds_insert();
     // helper::test_out_bounds_remove();
+
+    // helper::test_query();
+    helper::test_dir_query();
 
     // helper::print_size();
 }

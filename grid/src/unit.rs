@@ -65,6 +65,23 @@ impl Unit {
         self.id == INACTIVE
     }
 
+    pub fn is_bump(&self, other:&Unit) -> bool {
+
+        self.is_bump_xy(other.x, other.y)
+    }
+
+    pub fn is_bump_xy(&self, x:i16, y:i16) -> bool {
+
+        (self.x - x as i16).abs() <= CHECK_RADIUS_I16 && 
+        (self.y - y as i16).abs() <= CHECK_RADIUS_I16
+    }
+
+    pub fn is_bump_dxy(&self, dx:i16, dy:i16) -> bool {
+
+        dx.abs() <= CHECK_RADIUS_I16 && 
+        dy.abs() <= CHECK_RADIUS_I16
+    }
+
     pub fn bump_front(&self, other:&Unit, dir:u8) -> bool {
 
         self.bump_front_xy(dir, other.x, other.y)
@@ -73,13 +90,8 @@ impl Unit {
     pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
         let dx = self.x - x;
         let dy = self.y - y;
-
-        if dx.abs() > CHECK_RADIUS_I16 ||
-            dx.abs() > CHECK_RADIUS_I16 {
-
-                return false;
-        }
         
+        self.is_bump_dxy(dx, dy) &&
         Self::at_front_dxy(dir, dx, dy)
     }
 
@@ -128,7 +140,7 @@ impl Unit {
     }
 
     pub fn print(&self) {
-        println!("{{id:{:5}, x:{:5}, y:{:5}, next:{:5}, next_free:{:5}}}", 
+        println!("{{id:{:3}, x:{:3}, y:{:3}, next:{:5}, next_free:{:5}}}", 
             self.id, self.x, self.y, self.next, self.next_free
         );
     }
