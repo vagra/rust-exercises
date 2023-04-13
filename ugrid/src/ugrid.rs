@@ -31,13 +31,13 @@ const INV_CELL_SIZE: f32 = 1.0 / CELL_SIZE;
 
 
 #[derive(Debug)]
-pub struct Grid{
+pub struct UGrid{
     cells: Rows,
     pool: Pool,
 }
 
 
-impl Default for Grid {
+impl Default for UGrid {
 
     fn default() -> Self {
         
@@ -48,7 +48,7 @@ impl Default for Grid {
     }
 }
 
-impl Index<(u16, u16)> for Grid {
+impl Index<(u16, u16)> for UGrid {
     type Output = Unit;
     
     fn index(&self, index: (u16, u16)) -> &Self::Output {
@@ -58,7 +58,7 @@ impl Index<(u16, u16)> for Grid {
     }
 }
 
-impl IndexMut<(u16, u16)> for Grid {
+impl IndexMut<(u16, u16)> for UGrid {
 
     fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
         let (i, j) = index;
@@ -69,7 +69,7 @@ impl IndexMut<(u16, u16)> for Grid {
 
 
 
-impl Grid {
+impl UGrid {
 
     pub fn insert(&mut self, id: u32, x:f32, y:f32) {
 

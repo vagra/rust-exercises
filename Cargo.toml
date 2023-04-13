@@ -3,7 +3,7 @@ resolver = "2"
 members = [
 	"linked",
 	"stdlib",
-	"grid",
+	"ugrid",
 ]
 
 [profile.dev]

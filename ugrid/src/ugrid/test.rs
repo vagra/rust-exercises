@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn default_work() {
-    let grid = Grid::default();
+    let grid = UGrid::default();
 
     assert_eq!(grid.pool.size(), 0);
     assert_eq!(grid.cells.len(), ROWS);
@@ -11,7 +11,7 @@ fn default_work() {
 
 #[test]
 fn insert_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -43,7 +43,7 @@ fn insert_work() {
 
 #[test]
 fn index_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.insert(101, 12.3, 98.4);
     grid.insert(102, 23.3, 76.4);
@@ -64,7 +64,7 @@ fn index_work() {
 #[test]
 fn remove_work() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -94,7 +94,7 @@ fn remove_work() {
 
 #[test]
 fn move_cell_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -161,7 +161,7 @@ fn move_cell_work() {
 
 #[test]
 fn query_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -175,7 +175,7 @@ fn query_work() {
 
 #[test]
 fn dir_query_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -215,7 +215,7 @@ fn dir_query_work() {
 #[test]
 fn in_grid_work() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -236,7 +236,7 @@ fn in_grid_work() {
 #[test]
 fn in_cell_work() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -266,7 +266,7 @@ fn pos2cell_work() {
 
 #[test]
 fn out_bounds_insert_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.insert(201, -2000.0, 1600.0);
@@ -302,7 +302,7 @@ fn out_bounds_insert_work() {
 
 #[test]
 fn out_bounds_remove_work() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.insert(205, -2000.0, 300.0);

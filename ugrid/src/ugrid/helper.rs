@@ -1,7 +1,7 @@
 use super::*;
 
 pub fn test_insert_remove() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -23,7 +23,7 @@ pub fn test_insert_remove() {
 
 pub fn test_move_cell() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -51,7 +51,7 @@ pub fn test_move_cell() {
 
 pub fn test_query() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -62,7 +62,7 @@ pub fn test_query() {
 
 pub fn test_dir_query() {
 
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -128,7 +128,7 @@ pub fn test_pos2cell() {
 
 
 pub fn test_out_bounds_insert() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.print_cells();
@@ -151,7 +151,7 @@ pub fn test_out_bounds_insert() {
 
 
 pub fn test_out_bounds_remove() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
     grid.init_test_data();
 
     grid.print_cells();
@@ -174,7 +174,7 @@ pub fn test_out_bounds_remove() {
 
 
 pub fn print_size() {
-    let mut grid = Grid::default();
+    let mut grid = UGrid::default();
 
     grid.init_test_data();
 
@@ -183,7 +183,7 @@ pub fn print_size() {
     println!("size of Rows: {}", mem::size_of::<Rows>());
     println!("size of Cols: {}", mem::size_of::<Cols>());
     println!("size of Pool: {}", mem::size_of::<Pool>());
-    println!("size of Grid: {}", mem::size_of::<Grid>());
+    println!("size of Grid: {}", mem::size_of::<UGrid>());
 
     println!("size of pool: {}", mem::size_of::<Unit>() * POOL_SIZE as usize);
 }

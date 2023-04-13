@@ -1,11 +1,11 @@
 mod unit;
 mod pool;
 mod cells;
-mod grid;
+mod ugrid;
 
 
 fn main() {
     println!("Hello, grid!");
 
-    grid::main();
+    ugrid::main();
 }

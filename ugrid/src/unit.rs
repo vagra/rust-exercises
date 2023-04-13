@@ -4,7 +4,7 @@ use std::{ops::{Index, IndexMut}};
 
 use rand::Rng;
 
-use crate::{pool::*, grid::*};
+use crate::{pool::*, ugrid::*};
 
 
 #[cfg(test)]
