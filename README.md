@@ -2,7 +2,7 @@
 Some practice projects for rust.
 
 
-# grid
+# ugrid
 impl Dragon Energy's uniform-grid using rust.
 
 
